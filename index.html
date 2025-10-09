@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biswa Calories AI | Professional Nutrition Dashboard (Dark Mode)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter Font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Deep Slate Gray (Tailwind Slate-900) */
+            color: #F8FAFC; /* Light Text */
+            overflow-x: hidden;
+        }
+        /* Primary Accent Color - Vibrant Teal/Emerald */
+        .ai-accent {
+            background-color: #2DD4BF; /* Teal 400 */
+        }
+        .ai-accent-text {
+            color: #2DD4BF;
+        }
+        .ai-card {
+            background-color: #1E293B; /* Slate 800 */
+            border: 1px solid #334155; /* Slate 700 */
+            transition: all 0.3s ease-in-out;
+        }
+        .ai-card:hover {
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.15); /* Subtle Teal Glow */
+            transform: translateY(-1px);
+        }
+
+        /* Premium Gradient Button */
+        .premium-btn {
+            background-image: linear-gradient(to right, #0D9488 0%, #2DD4BF 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .premium-btn:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        .premium-btn:hover {
+            box-shadow: 0 10px 25px -5px rgba(45, 212, 191, 0.4);
+        }
+        .premium-btn:active:after {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Macro Bar Colors on Dark Theme */
+        .protein-color { background-color: #F87171; /* Red 400 */ }
+        .carbs-color { background-color: #60A5FA; /* Blue 400 */ }
+        .fat-color { background-color: #FBBF24; /* Amber 400 */ }
+
+        /* Custom Scrollbar for better UX */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; /* Slate 600 */
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+<!-- Fixed Sidebar (Application Feel) -->
+<aside class="w-64 bg-slate-900 border-r border-slate-700 p-6 flex flex-col sticky top-0 h-screen hidden lg:flex">
+
+    <!-- Logo & Branding -->
+    <div class="mb-10 pt-2">
+        <div class="flex items-center">
+            <svg class="w-8 h-8 ai-accent-text mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21C15 19 15 15 17 15C19 15 20 17 21 17C22 17 22 14 20 12C18 10 18 6 20 4C22 2 20 1 18 1C16 1 15 3 13 3C11 3 10 1 8 1C6 1 5 3 3 5C1 7 1 11 3 13C5 15 7 15 9 15C11 15 11 19 12 21Z"></path></svg>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Biswa<span class="ai-accent-text">AI</span></h1>
+        </div>
+        <p class="text-xs text-slate-500 mt-1 ml-1">Precision Nutrition v3.1</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="space-y-2 flex-grow">
+        <a href="#" class="flex items-center px-4 py-2 rounded-lg font-medium text-slate-200 hover:bg-slate-700 transition ai-accent-text bg-slate-800">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Dashboard
+        </a>
+        <a href="#upload-card" class="flex items-center px-4 py-2 rounded-lg font-medium text-slate-400 hover:bg-slate-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.777v6.446a1 1 0 01-1.447.886L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            Analyze Meal
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 rounded-lg font-medium text-slate-400 hover:bg-slate-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2v5m0-5c-1.657 0-3-.895-3-2s1.343-2 3-2z"></path></svg>
+            My History
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 rounded-lg font-medium text-slate-400 hover:bg-slate-700 transition">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2h2m-4 0a2 2 0 002-2h2m0 0a2 2 0 012-2h2m0 0a2 2 0 012 2h2m-4 0a2 2 0 002 2h2"></path></svg>
+            Settings
+        </a>
+    </nav>
+
+    <!-- Profile/Widget Footer -->
+    <div class="mt-auto pt-6 border-t border-slate-700">
+        <div class="flex items-center">
+            <div class="h-10 w-10 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">B</div>
+            <div class="ml-3">
+                <p class="font-semibold text-sm">Biswajit Sahoo</p>
+                <p class="text-xs text-slate-400">Data Analyst</p>
+            </div>
+        </div>
+<!--        <button class="w-full text-center mt-4 text-xs py-2 rounded-lg text-slate-400 hover:bg-slate-700 transition">-->
+<!--            Log Out-->
+<!--        </button>-->
+    </div>
+
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-grow p-6 sm:p-10 lg:pl-10">
+
+    <!-- Mobile Header (Visible on smaller screens) -->
+    <header class="mb-8 lg:hidden flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <h2 class="text-2xl font-bold text-white">Dashboard</h2>
+        <div class="h-8 w-8 bg-pink-500 rounded-full"></div>
+    </header>
+
+    <!-- Main Dashboard Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- COLUMN 1 & 2: Main Analysis and AI Prep -->
+        <div class="lg:col-span-2 space-y-8">
+
+            <!-- 1. Hero/Introduction Card (Top-tier component) -->
+            <div class="ai-card p-8 rounded-3xl shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <div>
+                            <span class="text-sm font-medium px-3 py-1 rounded-full bg-teal-400 text-slate-900 mb-3 inline-block">
+                                Welcome Back, Biswa
+                            </span>
+                        <h2 class="text-4xl font-extrabold text-white mb-2">
+                            Instant Precision Analysis
+                        </h2>
+                        <p class="text-slate-400 text-lg">
+                            Upload a photo of your meal below. Our V3 AI model will deliver sub-gram macro accuracy in seconds.
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <!-- Quick Calorie Goal Widget -->
+                        <div class="p-4 ai-accent rounded-xl text-slate-900 font-bold text-center">
+                            <span class="text-xs block">Goal Today</span>
+                            <span class="text-2xl">64%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: 2. Image Preview Card - Stays visible during and after analysis -->
+            <div id="image-preview-card" class="ai-card p-4 rounded-3xl shadow-xl hidden relative">
+                <img id="meal-image-preview" src="" alt="Meal for analysis" class="w-full h-auto max-h-96 object-cover rounded-xl border border-slate-700">
+                <!-- Remove Image Button (X) - Always visible when image is present -->
+                <button id="remove-image-btn" title="Remove Image" class="absolute top-6 right-6 p-2 rounded-full bg-red-600 text-white shadow-lg hover:bg-red-500 transition focus:outline-none z-10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <!-- End NEW: Image Preview Card -->
+
+            <!-- 3. Interactive Upload Card (Core App Module) -->
+            <div class="ai-card p-8 rounded-3xl" id="upload-card">
+                <h3 class="text-2xl font-bold text-white mb-6">Capture or Upload Meal Photo</h3>
+
+                <div class="flex flex-col items-center p-8 rounded-2xl border-4 border-dashed border-slate-600 bg-slate-800 transition duration-300 hover:border-teal-400">
+                    <svg class="w-16 h-16 ai-accent-text mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 10l4.553-2.276A1 1 0 0121 8.777v6.446a1 1 0 01-1.447.886L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+
+                    <h4 class="text-xl font-bold text-white mb-2">Drag & Drop or Choose File</h4>
+                    <p class="text-sm text-slate-400 mb-6 text-center">JPG, PNG, and HEIC files up to 10MB are supported for analysis.</p>
+
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full justify-center">
+                        <!-- ADDED onclick="clearImage()" here to clear previous image BEFORE opening camera/file selector -->
+                        <label for="cameraInput" onclick="clearImage()" class="premium-btn text-white font-bold py-3 px-6 rounded-xl text-base shadow-lg transition duration-300 cursor-pointer flex items-center justify-center sm:w-1/2">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.865-1.441A2 2 0 0110.153 4h3.694a2 2 0 011.664.89l.865 1.441A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Use Camera
+                        </label>
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+
+                        <!-- ADDED onclick="clearImage()" here to clear previous image BEFORE opening file selector -->
+                        <label for="fileInput" onclick="clearImage()" class="bg-slate-700 text-white font-bold py-3 px-6 rounded-xl text-base shadow-lg hover:bg-slate-600 transition duration-300 border border-slate-600 cursor-pointer flex items-center justify-center sm:w-1/2">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            Choose File
+                        </label>
+                        <input type="file" id="fileInput" accept="image/*" class="hidden">
+                    </div>
+
+                    <!-- Loading Indicator -->
+                    <div id="loading" class="hidden mt-6 flex items-center text-slate-300 font-semibold">
+                        <svg class="animate-spin -ml-1 mr-3 h-6 w-6 ai-accent-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span id="loading-text">Analyzing image and calculating macros...</span>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="error-message-box" class="hidden mt-4 p-4 bg-red-900/40 border border-red-700 text-red-400 rounded-xl w-full">
+                        <p id="error-message" class="text-sm font-medium text-center"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Detected Items List -->
+            <div class="ai-card p-8 rounded-3xl">
+                <h4 class="text-2xl font-bold text-white mb-6 flex justify-between items-center">
+                    Detected Food Items
+                    <span id="analysis-status-badge" class="text-sm font-medium px-3 py-1 rounded-full bg-slate-700 text-slate-300">
+                             Awaiting Analysis
+                        </span>
+                </h4>
+                <ul id="detected-items-list" class="space-y-4 h-64 overflow-y-auto pr-2">
+                    <li class="text-slate-500 italic p-4 text-center">Upload a photo to see the breakdown of your meal components.</li>
+                    <!-- Items will be populated here by JavaScript -->
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- COLUMN 3: Right Sidebar - Results & AI Generator -->
+        <div class="lg:col-span-1 space-y-8 sticky top-6">
+
+            <!-- 5. Total Energy & Macro Summary -->
+            <div class="ai-card p-6 rounded-3xl">
+                <h4 class="text-xl font-bold text-white mb-6 flex items-center">
+                    <svg class="w-5 h-5 ai-accent-text mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Macro Breakdown
+                </h4>
+
+                <!-- Total Calories -->
+                <div class="text-center p-5 ai-accent rounded-2xl mb-6 text-slate-900">
+                    <span class="text-6xl font-extrabold block" id="total-calories">0</span>
+                    <p class="mt-1 text-lg font-semibold">Total Calories (kcal)</p>
+                </div>
+
+                <!-- Macro Bar and Legend -->
+                <div class="w-full h-4 flex rounded-full overflow-hidden mb-4 bg-slate-700">
+                    <div id="macro-protein-bar" class="protein-color h-full transition-all duration-700 ease-out" style="width: 0%;"></div>
+                    <div id="macro-carbs-bar" class="carbs-color h-full transition-all duration-700 ease-out" style="width: 0%;"></div>
+                    <div id="macro-fat-bar" class="fat-color h-full transition-all duration-700 ease-out" style="width: 0%;"></div>
+                </div>
+
+                <!-- Macro Detail Grid -->
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="p-3 rounded-xl bg-slate-800 border border-red-700/50">
+                        <p id="protein-g" class="text-xl font-extrabold text-red-400">0g</p>
+                        <p class="text-xs text-red-400/80">Protein (%)</p>
+                        <p id="protein-percent" class="text-sm font-semibold mt-1">0%</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-800 border border-blue-700/50">
+                        <p id="carbs-g" class="text-xl font-extrabold text-blue-400">0g</p>
+                        <p class="text-xs text-blue-400/80">Carbs (%)</p>
+                        <p id="carbs-percent" class="text-sm font-semibold mt-1">0%</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-800 border border-amber-700/50">
+                        <p id="fat-g" class="text-xl font-extrabold text-amber-400">0g</p>
+                        <p class="text-xs text-amber-400/80">Fat (%)</p>
+                        <p id="fat-percent" class="text-sm font-semibold mt-1">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. AI Feature: Meal Prep Generator -->
+            <div class="ai-card p-6 rounded-3xl">
+                <h4 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <svg class="w-5 h-5 ai-accent-text mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10a2 2 0 01-2 2h-2M4 7v10a2 2 0 002 2h2m-2-4h8m0 0v-4m-4 4v-4m-4 4v-4"></path></svg>
+                    Prep Assistant AI
+                </h4>
+                <p class="text-slate-400 text-sm mb-6">Instantly suggest an actionable recipe using the ingredients we just detected.</p>
+
+                <button id="generate-recipe-btn" class="premium-btn text-white font-bold py-3 px-8 rounded-xl text-base w-full shadow-lg transition duration-300" disabled>
+                    Generate Recipe Idea
+                </button>
+
+                <div id="recipe-loading" class="hidden mt-4 flex items-center justify-center text-slate-300 font-semibold">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 ai-accent-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span id="recipe-loading-text">Consulting the culinary database...</span>
+                </div>
+
+                <div id="recipe-output-card" class="hidden mt-4 p-5 bg-slate-800 border border-slate-700 rounded-xl">
+                    <h5 id="recipe-name" class="text-lg font-extrabold ai-accent-text mb-2"></h5>
+                    <p id="recipe-description" class="text-slate-400 mb-4 text-sm"></p>
+
+                    <h6 class="font-bold text-sm text-white mb-2">Ingredients:</h6>
+                    <ul id="recipe-ingredients-list" class="list-disc list-inside text-sm text-slate-300 mb-4 ml-4 space-y-1"></ul>
+
+                    <h6 class="font-bold text-sm text-white mb-2">Steps:</h6>
+                    <ol id="recipe-steps-list" class="list-decimal list-inside text-sm text-slate-300 space-y-1 ml-4"></ol>
+                </div>
+            </div>
+
+            <!-- New Analysis Button -->
+            <div class="text-center pt-4" id="new-analysis-container">
+                <button id="start-fresh-analysis-btn" class="bg-slate-700 text-white font-bold py-3 px-8 rounded-xl text-base shadow-xl hover:shadow-2xl transition duration-300 hover:bg-slate-600 w-full">
+                    ← Start Fresh Analysis
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+
+<script>
+    // --- Defensive Element Retrieval Helper ---
+    const getElement = (id) => document.getElementById(id);
+
+    // Element references
+    const cameraInput = getElement('cameraInput');
+    const fileInput = getElement('fileInput');
+    const loadingDiv = getElement('loading');
+    const errorMessage = getElement('error-message');
+    const errorMessageBox = getElement('error-message-box');
+    const detectedItemsList = getElement('detected-items-list');
+    const analysisStatusBadge = getElement('analysis-status-badge');
+    const loadingText = getElement('loading-text');
+    const generateRecipeBtn = getElement('generate-recipe-btn');
+    const recipeLoadingDiv = getElement('recipe-loading');
+    const recipeOutputCard = getElement('recipe-output-card');
+    const recipeNameEl = getElement('recipe-name');
+    const recipeDescriptionEl = getElement('recipe-description');
+    const recipeIngredientsList = getElement('recipe-ingredients-list');
+    const recipeStepsList = getElement('recipe-steps-list');
+
+    // NEW Element references
+    const imagePreviewCard = getElement('image-preview-card');
+    const mealImagePreview = getElement('meal-image-preview');
+    const removeImageBtn = getElement('remove-image-btn');
+    const startFreshAnalysisBtn = getElement('start-fresh-analysis-btn');
+
+    // NEW state variable to hold the base64 data for analysis
+    let mealImageBase64 = null;
+
+    // API endpoint
+    const EXTERNAL_API_URL = 'https://testinghellobiswa.app.n8n.cloud/webhook/meal-AI';
+
+    // Mock data fallback (Used for initial analysis if API fails)
+    const MOCK_DATA_FALLBACK = {
+        status: "mock_data",
+        food: [
+            { name: "Brown Rice", quantity: "1 cup cooked", calories: 215, protein: 4.5, carbs: 45, fat: 1.8 },
+            { name: "Salmon Fillet", quantity: "4 oz (112g)", calories: 200, protein: 25, carbs: 0, fat: 10 },
+            { name: "Steamed Broccoli", quantity: "1 cup", calories: 35, protein: 2.5, carbs: 6, fat: 0.3 },
+            { name: "Lemon Dressing", quantity: "1 Tbsp", calories: 45, protein: 0, carbs: 1, fat: 4.5 }
+        ],
+        total: {
+            calories: 495,
+            protein: 32,
+            carbs: 52,
+            fat: 16.6
+        }
+    };
+
+    // Mock Recipe Generation (Simulates a response from the LLM API using JSON schema)
+    const MOCK_RECIPE_RESPONSE = {
+        candidates: [{
+            content: {
+                parts: [{
+                    text: JSON.stringify({
+                        recipeName: "AI-Optimized Lemon-Herb Salmon Bowl",
+                        description: "A highly-nutritious meal prep idea leveraging the detected ingredients for a balanced, low-carb-high-protein lunch. Focus on fresh herbs for flavor.",
+                        ingredients: [
+                            "1 Salmon Fillet (Analyzed portion)",
+                            "1 cup Brown Rice (Analyzed portion)",
+                            "1 cup Broccoli florets, steamed (Analyzed portion)",
+                            "1/2 tsp Dill or Parsley, chopped",
+                            "1 tsp Extra Virgin Olive Oil",
+                            "Fresh Lemon wedges"
+                        ],
+                        steps: [
+                            "Flake the cooked salmon into the rice and mix gently.",
+                            "Toss the steamed broccoli with the olive oil and fresh herbs.",
+                            "Layer the rice mixture and broccoli into a prep container.",
+                            "Squeeze fresh lemon over the top right before serving to maximize flavor.",
+                            "Note: This recipe is optimized for high protein intake and satiety."
+                        ]
+                    })
+                }]
+            }
+        }]
+    };
+
+    // --- Utility Functions ---
+
+    /** Converts a File object to a Base64 string. */
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = (error) => reject(error);
+        });
+    }
+
+    /** Converts base64 to a Blob object. */
+    function base64ToBlob(base64, contentType) {
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        return new Blob([byteArray], { type: contentType });
+    }
+
+    /** Calculate total nutrition from food items. */
+    function calculateTotalFromFood(foodItems) {
+        const total = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+        if (foodItems && Array.isArray(foodItems)) {
+            foodItems.forEach(item => {
+                total.calories += Number(item.calories) || 0;
+                total.protein += Number(item.protein) || 0;
+                total.carbs += Number(item.carbs) || 0;
+                total.fat += Number(item.fat) || 0;
+            });
+        }
+        return total;
+    }
+
+    /** Displays an error message in the dedicated box. */
+    function displayError(message) {
+        if (errorMessage) errorMessage.textContent = message;
+        if (errorMessageBox) errorMessageBox.classList.remove('hidden');
+        if (loadingDiv) loadingDiv.classList.add('hidden');
+    }
+
+    /**
+     * Simulates an external API call for image analysis.
+     * Falls back to mock data if API fails.
+     */
+    async function analyzeImage(imageBlob, fileName) {
+        const formData = new FormData();
+        formData.append('file', imageBlob, fileName);
+
+        const loadingMessages = [
+            'Analyzing image and calculating macros...',
+            'Detecting food boundaries and portions...',
+            'Cross-referencing nutritional database...',
+            'Finalizing analysis with V3 AI...',
+            'Generating visual report...'
+        ];
+        let messageIndex = 0;
+        const updateLoadingMessage = setInterval(() => {
+            if (loadingText) {
+                loadingText.textContent = loadingMessages[messageIndex % loadingMessages.length];
+                messageIndex++;
+            }
+        }, 1500);
+
+        try {
+            // In a real 10L project, we would implement exponential backoff and stricter error checking.
+            const response = await fetch(EXTERNAL_API_URL, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                console.warn(`API non-OK status: ${response.status}. Falling back to static data.`);
+                return {...MOCK_DATA_FALLBACK, total: calculateTotalFromFood(MOCK_DATA_FALLBACK.food)};
+            }
+
+            const result = await response.json();
+
+            let nutritionData = result.output || result;
+
+            if (!nutritionData.total) {
+                nutritionData.total = calculateTotalFromFood(nutritionData.food);
+            }
+
+            return nutritionData;
+
+        } catch (error) {
+            console.error("Network or parsing error during API call. Falling back to static data.", error);
+            return {...MOCK_DATA_FALLBACK, total: calculateTotalFromFood(MOCK_DATA_FALLBACK.food)};
+        } finally {
+            clearInterval(updateLoadingMessage);
+        }
+    }
+
+    /**
+     * Simulates a structured LLM API call for recipe generation.
+     */
+    async function generateRecipeFromLLM(foodItems) {
+        // This is the expected user query to the LLM
+        const userQuery = `Create a meal prep recipe using these analyzed ingredients: ${foodItems.map(f => f.name).join(', ')}. The recipe must be returned in the following JSON format: {recipeName, description, ingredients:[], steps:[]}`;
+        console.log("Simulated LLM Prompt:", userQuery);
+
+        // Simulate network delay
+        return new Promise(resolve => {
+            setTimeout(() => {
+                // Simulate successful API response
+                let result = JSON.parse(MOCK_RECIPE_RESPONSE.candidates[0].content.parts[0].text);
+                resolve(result);
+            }, 2000);
+        });
+    }
+
+    // --- Core Application Functions ---
+
+    /** * Clears the image preview, associated state, and crucially,
+     * the value of the file input elements.
+     */
+    function clearImage() {
+        // 1. Clear the image data state
+        mealImageBase64 = null;
+
+        // 2. Clear the input element values (CRITICAL for allowing re-upload of same file)
+        if (fileInput) fileInput.value = '';
+        if (cameraInput) cameraInput.value = '';
+
+        // 3. Hide the visual preview
+        if (mealImagePreview) mealImagePreview.src = '';
+        if (imagePreviewCard) imagePreviewCard.classList.add('hidden');
+
+        // 4. Reset all results displays
+        resetAnalysisDisplay();
+
+        // 5. Optionally provide console feedback for debugging
+        console.log('Image and file input state successfully cleared.');
+    }
+
+    /** Resets all analysis displays (macros, list, recipe) without reloading the page. */
+    function resetAnalysisDisplay() {
+        // Reset macro summary
+        if (getElement('total-calories')) getElement('total-calories').textContent = '0';
+
+        // Reset macro bars and percentages
+        ['protein', 'carbs', 'fat'].forEach(macro => {
+            if (getElement(`macro-${macro}-bar`)) getElement(`macro-${macro}-bar`).style.width = '0%';
+            if (getElement(`${macro}-g`)) getElement(`${macro}-g`).textContent = '0g';
+            if (getElement(`${macro}-percent`)) getElement(`${macro}-percent`).textContent = '0%';
+        });
+
+        // Reset detected items list
+        if (detectedItemsList) {
+            detectedItemsList.innerHTML = '<li class="text-slate-500 italic p-4 text-center">Upload a photo to see the breakdown of your meal components.</li>';
+        }
+
+        // Reset status badge
+        if (analysisStatusBadge) {
+            analysisStatusBadge.className = 'text-sm font-medium px-3 py-1 rounded-full bg-slate-700 text-slate-300';
+            analysisStatusBadge.innerHTML = 'Awaiting Analysis';
+        }
+
+        // Reset recipe generator
+        if (generateRecipeBtn) generateRecipeBtn.disabled = true;
+        if (recipeOutputCard) recipeOutputCard.classList.add('hidden');
+        if (recipeLoadingDiv) recipeLoadingDiv.classList.add('hidden');
+    }
+
+    /** NEW: Full reset function, called by the "Start Fresh Analysis" button. */
+    function startFreshAnalysis() {
+        // 1. Clear the image and current analysis state
+        clearImage();
+        // 2. Perform a full page reload (as requested by original button logic)
+        location.reload();
+    }
+
+    /** Starts the analysis process using the stored Base64 image data. */
+    async function startAnalysis(base64Data, fileName) {
+        if (!base64Data) {
+            displayError('No image data available to start analysis.');
+            return;
+        }
+
+        // Show loading and hide errors/recipe output
+        if (loadingDiv) loadingDiv.classList.remove('hidden');
+        if (errorMessageBox) errorMessageBox.classList.add('hidden');
+        if (generateRecipeBtn) generateRecipeBtn.disabled = true;
+        if (recipeOutputCard) recipeOutputCard.classList.add('hidden');
+
+        // Note: We don't call resetAnalysisDisplay() here because clearImage()
+        // is now called on click, which already calls resetAnalysisDisplay().
+
+        // Convert base64 back to Blob for the simulated API call
+        // We use image/jpeg as a generic assumption, a real app would use the file's original mimeType
+        const imageBlob = base64ToBlob(base64Data, 'image/jpeg');
+
+        const result = await analyzeImage(imageBlob, fileName);
+
+        // Hide loading
+        if (loadingDiv) loadingDiv.classList.add('hidden');
+
+        if (result && result.food && result.food.length > 0) {
+            renderResults(result);
+            if (generateRecipeBtn) generateRecipeBtn.disabled = false;
+        } else {
+            displayError('Analysis failed: Could not detect food items. Please try a different photo.');
+            resetAnalysisDisplay();
+        }
+    }
+
+    /** Renders the results (macros, items) to the UI. */
+    function renderResults(result) {
+        const { total, food = [], status } = result;
+        const calculatedTotal = total;
+
+        // 1. Status Badge
+        if (analysisStatusBadge) {
+            if (status === 'mock_data') {
+                analysisStatusBadge.className = 'text-sm font-medium px-3 py-1 rounded-full bg-red-900/40 text-red-400';
+                analysisStatusBadge.innerHTML = `⚠️ Mock Data Used`;
+            } else {
+                analysisStatusBadge.className = 'text-sm font-medium px-3 py-1 rounded-full bg-teal-400 text-slate-900';
+                analysisStatusBadge.innerHTML = `✅ Analysis Complete`;
+            }
+        }
+
+        // Calculations
+        const totalCalories = Number(calculatedTotal.calories) || 0;
+        const protein_g = Number(calculatedTotal.protein) || 0;
+        const carbs_g = Number(calculatedTotal.carbs) || 0;
+        const fat_g = Number(calculatedTotal.fat) || 0;
+
+        const protein_cal = protein_g * 4;
+        const carbs_cal = carbs_g * 4;
+        const fat_cal = fat_g * 9;
+        const totalMacroCalories = protein_cal + carbs_cal + fat_cal;
+
+        const protein_percent = totalMacroCalories > 0 ? ((protein_cal / totalMacroCalories) * 100).toFixed(0) : 0;
+        const carbs_percent = totalMacroCalories > 0 ? ((carbs_cal / totalMacroCalories) * 100).toFixed(0) : 0;
+        const fat_percent = totalMacroCalories > 0 ? ((fat_cal / totalMacroCalories) * 100).toFixed(0) : 0;
+
+        // 2. Summary and Calories
+        const totalCalEl = getElement('total-calories');
+        if (totalCalEl) totalCalEl.textContent = totalCalories.toFixed(0);
+
+        // 3. Macronutrients (Grams and Percentage)
+        const elements = {
+            proteinG: getElement('protein-g'), carbsG: getElement('carbs-g'), fatG: getElement('fat-g'),
+            proteinPct: getElement('protein-percent'), carbsPct: getElement('carbs-percent'), fatPct: getElement('fat-percent'),
+            macroProteinBar: getElement('macro-protein-bar'), macroCarbsBar: getElement('macro-carbs-bar'), macroFatBar: getElement('macro-fat-bar')
+        };
+
+        if (elements.proteinG) elements.proteinG.textContent = `${protein_g.toFixed(1)}g`;
+        if (elements.carbsG) elements.carbsG.textContent = `${carbs_g.toFixed(1)}g`;
+        if (elements.fatG) elements.fatG.textContent = `${fat_g.toFixed(1)}g`;
+        if (elements.proteinPct) elements.proteinPct.textContent = `${protein_percent}%`;
+        if (elements.carbsPct) elements.carbsPct.textContent = `${carbs_percent}%`;
+        if (elements.fatPct) elements.fatPct.textContent = `${fat_percent}%`;
+
+        if (elements.macroProteinBar) elements.macroProteinBar.style.width = `${protein_percent}%`;
+        if (elements.macroCarbsBar) elements.macroCarbsBar.style.width = `${carbs_percent}%`;
+        if (elements.macroFatBar) elements.macroFatBar.style.width = `${fat_percent}%`;
+
+
+        // 4. Detected Items List
+        if (detectedItemsList) {
+            detectedItemsList.innerHTML = '';
+            if (food.length > 0) {
+                food.forEach(item => {
+                    const itemCalories = (Number(item.calories) || 0).toFixed(0);
+                    const itemProtein = (Number(item.protein) || 0).toFixed(1);
+                    const itemCarbs = (Number(item.carbs) || 0).toFixed(1);
+                    const itemFat = (Number(item.fat) || 0).toFixed(1);
+
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center p-4 rounded-xl bg-slate-800 hover:bg-slate-700 transition border border-slate-700/50';
+                    li.innerHTML = `
+                        <div class="flex flex-col">
+                            <span class="font-semibold text-white text-lg">${item.name}</span>
+                            <span class="text-xs text-slate-400">${item.quantity}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xl font-bold ai-accent-text">${itemCalories} kcal</span>
+                            <div class="text-sm text-slate-400 mt-1 space-x-3">
+                                <span class="text-red-400/90 font-medium">P: ${itemProtein}g</span>
+                                <span class="text-blue-400/90 font-medium">C: ${itemCarbs}g</span>
+                                <span class="text-amber-400/90 font-medium">F: ${itemFat}g</span>
+                            </div>
+                        </div>
+                    `;
+                    detectedItemsList.appendChild(li);
+                });
+            } else {
+                detectedItemsList.innerHTML = '<li class="text-slate-500 italic p-4 text-center">No food items were detected in the photo.</li>';
+            }
+        }
+    }
+
+    /** Main entry point for file selection (camera or file). */
+    async function handleFileSelect(file) {
+        if (!file) return;
+
+        // 1. Display the image immediately (using Object URL for performance)
+        const objectURL = URL.createObjectURL(file);
+        if (mealImagePreview) mealImagePreview.src = objectURL;
+        if (imagePreviewCard) imagePreviewCard.classList.remove('hidden');
+
+        // 2. Convert to Base64 for the API call preparation (asynchronously)
+        try {
+            mealImageBase64 = await fileToBase64(file);
+        } catch (e) {
+            displayError("Could not process image file. It may be too large or invalid.");
+            clearImage();
+            return;
+        }
+
+        // Revoke the object URL after image is loaded to prevent memory leaks
+        mealImagePreview.onload = () => {
+            URL.revokeObjectURL(objectURL);
+        };
+
+        // 3. Start Analysis
+        await startAnalysis(mealImageBase64, file.name);
+    }
+
+    /** Handles recipe generation button click. */
+    async function handleRecipeGeneration() {
+        if (!mealImageBase64) {
+            displayError('Please analyze a meal first before generating a recipe.');
+            return;
+        }
+
+        if (generateRecipeBtn) generateRecipeBtn.disabled = true;
+        if (recipeLoadingDiv) recipeLoadingDiv.classList.remove('hidden');
+        if (recipeOutputCard) recipeOutputCard.classList.add('hidden');
+
+        try {
+            // For mock data, we rely on the MOCK_DATA_FALLBACK content.food for ingredient list
+            const foodItems = MOCK_DATA_FALLBACK.food;
+            const recipe = await generateRecipeFromLLM(foodItems);
+
+            if (recipe) {
+                recipeNameEl.textContent = recipe.recipeName;
+                recipeDescriptionEl.textContent = recipe.description;
+
+                recipeIngredientsList.innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join('');
+                recipeStepsList.innerHTML = recipe.steps.map(s => `<li>${s}</li>`).join('');
+
+                recipeOutputCard.classList.remove('hidden');
+            } else {
+                throw new Error('Recipe generation returned an unexpected response.');
+            }
+        } catch (error) {
+            console.error("Recipe Generation Error:", error);
+            displayError("Failed to generate recipe. Please check your network or try again.");
+        } finally {
+            if (generateRecipeBtn) generateRecipeBtn.disabled = false;
+            if (recipeLoadingDiv) recipeLoadingDiv.classList.add('hidden');
+        }
+    }
+
+    // --- Event Listeners ---
+
+    // Image Upload/Capture listeners
+    // Note: The click handler on the <label> now calls clearImage() BEFORE this change event fires.
+    if (fileInput) fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
+    if (cameraInput) cameraInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
+
+    // Recipe Generation listener
+    if (generateRecipeBtn) generateRecipeBtn.addEventListener('click', handleRecipeGeneration);
+
+    // NEW: Remove Image listener (The 'cross button' behavior)
+    if (removeImageBtn) removeImageBtn.addEventListener('click', clearImage);
+
+    // NEW: Start Fresh Analysis listener
+    if (startFreshAnalysisBtn) startFreshAnalysisBtn.addEventListener('click', startFreshAnalysis);
+
+</script>
+
+
+</body>
+</html>
