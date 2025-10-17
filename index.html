@@ -3,313 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BISWA.AI | Executive Nutrition Console V5</title>
+    <title>Biswa AI Calorie Sentinel - Executive Nutrition Report</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Rajdhani Font for technical/digital feel, and Inter for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Oswald:wght@200..700&family=Nova+Mono&display=swap" rel="stylesheet">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Inter:wght@300;400;600;800&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000000; /* True Black for depth */
-            color: #E0F2F2; /* Soft White/Teal Text */
-            overflow-x: hidden;
-        }
+        /* Base Colors and Fonts */
+        .inter-font { font-family: 'Inter', sans-serif; }
+        .oswald-font { font-family: 'Oswald', sans-serif; }
+        .mono-font { font-family: 'Nova Mono', monospace; }
+        .bg-deep-space { background-color: #070a0f; }
+        .ai-neon-cyan { color: #00EADF; }
 
-        /* Primary Accent Color - Sharp, High-Tech Teal */
-        .ai-accent-color {
-            color: #00EADF;
-        }
-        .ai-accent-bg {
-            background-color: #00EADF;
-        }
-
-        /* Card Style: Deep Carbon with subtle shadow/border for 'Hardware' feel */
-        .console-card {
-            background-color: #0A0A0A; /* Dark Carbon */
-            border: 1px solid #1A1A1A; /* Inner Border */
-            box-shadow: 0 0 5px rgba(0, 234, 223, 0.05), inset 0 0 10px rgba(0, 0, 0, 0.5); /* Subtle inner/outer glow */
-            border-radius: 0.75rem; /* Industrial radius */
-            transition: all 0.2s;
-        }
-
-        /* High-Impact Digital Readout */
+        /* Digital Readout Style */
         .digital-readout {
-            font-family: 'Rajdhani', sans-serif;
-            text-shadow: 0 0 10px rgba(0, 234, 223, 0.5);
-            line-height: 1;
+            font-family: 'Nova Mono', monospace;
+            text-shadow: 0 0 8px rgba(0, 234, 223, 0.6), 0 0 15px rgba(0, 234, 223, 0.3);
+            letter-spacing: -0.05em;
         }
 
-        /* Macro Bar Colors - Serious, Technical Color Coding */
-        .protein-color { background-color: #F87171; /* Red */ }
-        .carbs-color { background-color: #34D399; /* Emerald */ }
-        .fat-color { background-color: #FBBF24; /* Amber */ }
-
-        /* Premium Button Style (High-Fidelity Interaction) */
-        .premium-btn {
-            background-image: linear-gradient(to right, #00EADF 0%, #009990 100%);
-            box-shadow: 0 5px 20px rgba(0, 234, 223, 0.4);
+        /* Card and Button Effects */
+        .ai-card {
+            background-color: #0f131a;
+            border: 1px solid #1a202c;
+            box-shadow: 0 4px 15px rgba(0, 234, 223, 0.05);
+            transition: all 0.3s ease;
         }
-        .premium-btn:hover {
-            box-shadow: 0 5px 25px rgba(0, 234, 223, 0.6);
-            transform: translateY(-1px);
+        .ai-card:hover {
+             box-shadow: 0 4px 20px rgba(0, 234, 223, 0.15);
         }
-
-        /* Scrollbar styling for a technical look */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .ai-button {
+            background: linear-gradient(90deg, #00C8B7 0%, #00EADF 100%);
+            color: #0f131a;
+            box-shadow: 0 4px 10px rgba(0, 234, 223, 0.4);
+            transition: all 0.3s ease;
         }
-        ::-webkit-scrollbar-track {
-            background: #0A0A0A;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00EADF;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #009990;
+        .ai-button:hover:not(:disabled) {
+            background: linear-gradient(90deg, #00EADF 0%, #00F9F0 100%);
+            box-shadow: 0 4px 15px rgba(0, 234, 223, 0.7);
+            transform: translateY(-2px);
         }
 
-        /* Styling for the large calorie number */
-        .calorie-digit {
-            font-size: 10rem; /* Massive size for authority */
+        /* Loading Animation */
+        .pulse-fade { animation: pulseFade 1.5s infinite; }
+        .pulse-fade:nth-child(2) { animation-delay: 0.3s; }
+        .pulse-fade:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes pulseFade {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
 
-        @media (max-width: 1024px) {
-            .calorie-digit {
-                font-size: 5rem;
-            }
+        /* Macro Bar transitions */
+        .macro-bar { transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+        /* Custom Scrollbar for Itemized List */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f131a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1a202c; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #00EADF; }
+
+        /* The High-Value Loading Panel */
+        .loading-panel {
+            border: 2px solid #00EADF;
+            box-shadow: 0 0 15px rgba(0, 234, 223, 0.4), inset 0 0 10px rgba(0, 234, 223, 0.2);
+            background: #111a26;
+            animation: border-pulse 4s infinite alternate;
+        }
+        @keyframes border-pulse {
+            0% { border-color: #00EADF; box-shadow: 0 0 15px rgba(0, 234, 223, 0.4); }
+            100% { border-color: #00b3a7; box-shadow: 0 0 25px rgba(0, 234, 223, 0.8); }
         }
     </style>
 </head>
-<body class="flex min-h-screen">
+<body class="bg-deep-space text-gray-200 min-h-screen inter-font p-4 md:p-10">
 
-<!-- Fixed Sidebar (Minimalist Branding) -->
-<aside class="w-20 bg-black border-r border-[#1A1A1A] p-4 flex flex-col sticky top-0 h-screen hidden lg:flex shadow-2xl shadow-black/70">
-    <div class="mb-12 pt-4">
-        <!-- Logo - Minimalist, High-Tech -->
-        <div class="flex flex-col items-center">
-            <!-- Icon representing Precision and Data Flow -->
-            <svg class="w-10 h-10 ai-accent-color" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="#00EADF" stroke-width="1.5"/>
-                <path d="M12 6V18M6 12H18M15 9L9 15" stroke="#00EADF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="text-xs font-bold ai-accent-color mt-1">V5.0</span>
-        </div>
-    </div>
-
-    <!-- Navigation - Essential Access Points -->
-    <nav class="space-y-6 flex-grow">
-        <!-- Dashboard / Home -->
-        <a href="#home" class="group flex flex-col items-center p-2 rounded-lg text-xs font-bold text-white hover:bg-[#00EADF] hover:text-black transition">
-            <svg class="w-6 h-6 mb-1 text-white group-hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            OVERVIEW
-        </a>
-        <!-- Analyze Meal (Active) -->
-        <a href="#upload-card" class="flex flex-col items-center p-2 rounded-lg text-xs font-bold ai-accent-color bg-[#00EADF]/10 border border-[#00EADF]/30">
-            <svg class="w-6 h-6 mb-1 ai-accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.777v6.446a1 1 0 01-1.447.886L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            ANALYST
-        </a>
-        <!-- Pro Settings -->
-        <a href="#" class="group flex flex-col items-center p-2 rounded-lg text-xs font-bold text-gray-400 hover:bg-[#00EADF] hover:text-black transition">
-            <svg class="w-6 h-6 mb-1 text-gray-400 group-hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.298.232 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            SYSTEM
-        </a>
-    </nav>
-
-    <!-- Profile Footer -->
-    <div class="mt-auto pt-6 border-t border-[#1A1A1A] text-center">
-        <div class="h-10 w-10 bg-[#00EADF] rounded-full flex items-center justify-center text-black font-extrabold text-lg mx-auto border-2 border-[#00EADF]/50">B</div>
-        <p class="text-xs text-gray-500 mt-2">Executive Access</p>
-    </div>
-
-</aside>
-
-<!-- Main Content Area -->
-<main class="flex-grow p-6 sm:p-10 lg:pl-10">
-
-    <!-- Header Section -->
-    <header class="mb-8 flex justify-between items-center">
-        <h2 class="text-3xl font-extrabold text-white tracking-widest">
-            <span class="ai-accent-color">NUTRITION</span> TERMINAL
-        </h2>
-        <button id="start-fresh-analysis-btn" class="text-sm font-semibold py-2 px-4 rounded-full border border-gray-700 text-gray-400 hover:border-[#00EADF] hover:text-[#00EADF] transition">
-            Start New Session
+<div class="max-w-8xl mx-auto">
+    <!-- Header: The Command Center Title -->
+    <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center">
+        <h1 class="text-5xl md:text-6xl font-extrabold oswald-font tracking-tight text-white leading-tight">
+            BISWA AI CALORIE <span class="ai-neon-cyan">SENTINEL</span>
+        </h1>
+        <button id="start-fresh-analysis-btn" class="mt-4 md:mt-0 px-4 py-2 text-sm rounded-full bg-gray-700/30 text-gray-400 hover:bg-red-900/40 hover:text-red-300 transition border border-gray-700/50">
+            <i data-lucide="refresh-ccw" class="w-4 h-4 inline-block mr-2"></i> REBOOT SYSTEM
         </button>
     </header>
 
-    <!-- Main Dashboard Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Error Message Box -->
+    <div id="error-message-box" class="hidden p-4 mb-8 bg-red-900/30 border border-red-600/50 rounded-xl card-transition">
+        <p id="error-message" class="text-red-300 font-medium flex items-center mono-font">
+            <i data-lucide="alert-triangle" class="w-5 h-5 mr-3 flex-shrink-0 text-red-400"></i>
+            <span class="flex-grow">SYSTEM ALERT: An error occurred.</span>
+        </p>
+    </div>
 
-        <!-- COLUMN 1 & 2: Main Analysis and AI Prep (Wider Area) -->
-        <div class="lg:col-span-2 space-y-8">
+    <!-- Main Content Grid -->
+    <main class="grid lg:grid-cols-12 gap-10">
 
-            <!-- 1. High-Impact Calorie Readout & Macro Summary -->
-            <div class="console-card p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- LEFT COLUMN (Input & Preview) - Spans 4/12 -->
+        <div class="lg:col-span-4 space-y-10">
+            <!-- Input Module -->
+            <div class="p-8 rounded-2xl ai-card">
+                <h2 class="text-2xl font-bold mb-6 text-white oswald-font tracking-wider border-b border-gray-700/50 pb-3">INITIATE SCAN</h2>
+                <p class="text-sm text-gray-400 mb-6">Provide visual data for immediate deep-level nutritional analysis by the Biswa Engine.</p>
 
-                <!-- Primary Readout (Left) -->
-                <div class="md:col-span-2 border-r border-[#1A1A1A] pr-6">
-                    <p class="text-lg font-bold text-gray-400 mb-2 uppercase tracking-widest">Calculated Energy Profile</p>
-                    <div class="flex items-center">
-                        <span class="calorie-digit digital-readout font-extrabold ai-accent-color" id="total-calories">0</span>
-                        <span class="text-5xl font-extrabold text-gray-400 ml-4 pt-10">kcal</span>
-                    </div>
-
-                    <!-- Macro Bar and Legend - High-Precision Meter Look -->
-                    <div class="w-full h-3 flex rounded-full overflow-hidden mt-6 bg-[#1A1A1A] border border-[#3A3A3A] shadow-inner">
-                        <div id="macro-protein-bar" class="protein-color h-full transition-all duration-700 ease-out" style="width: 0%;"></div>
-                        <div id="macro-carbs-bar" class="carbs-color h-full transition-all duration-700 ease-out" style="width: 0%;"></div>
-                        <div id="macro-fat-bar" class="fat-color h-full transition-all duration-700 ease-out" style="width: 0%;"></div>
-                    </div>
-                </div>
-
-                <!-- Macro Detail Grid (Right) -->
-                <div class="space-y-4 md:pt-4">
-                    <div class="p-3 bg-black border border-[#1A1A1A] rounded-md shadow-md">
-                        <p class="text-xs uppercase tracking-widest text-gray-500">Protein</p>
-                        <p id="protein-g" class="text-2xl font-bold text-pink-400 digital-readout mt-1">0g</p>
-                        <p id="protein-percent" class="text-sm text-gray-500">0% Energy</p>
-                    </div>
-                    <div class="p-3 bg-black border border-[#1A1A1A] rounded-md shadow-md">
-                        <p class="text-xs uppercase tracking-widest text-gray-500">Carbohydrates</p>
-                        <p id="carbs-g" class="text-2xl font-bold text-emerald-400 digital-readout mt-1">0g</p>
-                        <p id="carbs-percent" class="text-sm text-gray-500">0% Energy</p>
-                    </div>
-                    <div class="p-3 bg-black border border-[#1A1A1A] rounded-md shadow-md">
-                        <p class="text-xs uppercase tracking-widest text-gray-500">Fat</p>
-                        <p id="fat-g" class="text-2xl font-bold text-amber-400 digital-readout mt-1">0g</p>
-                        <p id="fat-percent" class="text-sm text-gray-500">0% Energy</p>
-                    </div>
+                <div class="flex flex-col space-y-4">
+                    <label for="file-input" class="w-full cursor-pointer bg-gray-800 hover:bg-gray-700/80 transition p-4 rounded-xl border-2 border-dashed border-gray-600 text-center">
+                        <i data-lucide="image" class="w-6 h-6 mx-auto mb-1 ai-neon-cyan"></i>
+                        <span class="text-base font-semibold text-gray-300">UPLOAD LOCAL DATA FILE</span>
+                        <input type="file" id="file-input" accept="image/*" class="hidden">
+                    </label>
+                    <label for="camera-input" class="w-full cursor-pointer bg-gray-800 hover:bg-gray-700/80 transition p-4 rounded-xl border-2 border-dashed border-gray-600 text-center">
+                        <i data-lucide="video" class="w-6 h-6 mx-auto mb-1 text-pink-400"></i>
+                        <span class="text-base font-semibold text-gray-300">CAPTURE LIVE FEED (Camera)</span>
+                        <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
+                    </label>
                 </div>
             </div>
 
-            <!-- 2. Interactive Upload Card (Core App Module) -->
-            <div class="console-card p-8" id="upload-card">
-                <h3 class="text-2xl font-bold text-white mb-6 border-b border-[#1A1A1A] pb-3">Image Acquisition & Analysis Trigger</h3>
-
-                <div id="image-preview-card" class="mb-6 relative hidden">
-                    <img id="meal-image-preview" src="" alt="Meal for analysis" class="w-full h-auto max-h-[25rem] object-cover rounded-lg border-2 border-[#00EADF]/50 shadow-lg">
-                    <!-- Remove Image Button (X) -->
-                    <button id="remove-image-btn" title="Remove Image" class="absolute top-4 right-4 p-2 rounded-full bg-red-800 text-white shadow-xl hover:bg-red-600 transition focus:outline-none z-10">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <!-- Preview Module -->
+            <div id="image-preview-card" class="hidden p-4 rounded-2xl ai-card">
+                <h2 class="text-xl font-bold mb-4 text-white border-b border-gray-800 pb-2">LOADED DATA</h2>
+                <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl shadow-gray-900/50 border border-gray-700">
+                    <img id="meal-image-preview" src="" alt="Meal for analysis" class="w-full h-full object-cover transition duration-500 ease-in-out">
+                    <button id="remove-image-btn" class="absolute top-3 right-3 p-2 bg-red-600/70 rounded-full text-white hover:bg-red-500 transition shadow-lg">
+                        <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
+                <p class="text-sm text-gray-500 mt-4 mono-font text-center">ANALYSIS PENDING</p>
+            </div>
+        </div>
 
-                <div class="flex flex-col items-center p-8 rounded-lg border-2 border-dashed border-gray-700 bg-[#0A0A0A] transition duration-300 hover:border-[#00EADF]/50">
+        <!-- RIGHT COLUMN (Results) - Spans 8/12 -->
+        <div class="lg:col-span-8 space-y-10">
 
-                    <h4 class="text-xl font-bold text-white mb-4">Upload or Live-Capture High-Fidelity Meal Photo</h4>
-                    <p class="text-sm text-gray-500 mb-6 text-center">V5 AI requires high resolution for sub-gram precision analysis. Max 10MB.</p>
+            <!-- Executive Summary Module -->
+            <div class="p-8 rounded-2xl ai-card">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-700/50 pb-3">
+                    <h2 class="text-2xl font-bold text-white oswald-font tracking-wider">EXECUTIVE REPORT SUMMARY</h2>
+                    <span id="analysis-status-badge" class="text-xs font-semibold px-4 py-2 rounded-full bg-gray-800 text-gray-400 border border-gray-700 mono-font">AWAITING DATA</span>
+                </div>
 
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full max-w-lg justify-center">
-                        <!-- Use Camera Button -->
-                        <label for="cameraInput" onclick="clearImage()" class="bg-gray-800 text-white font-semibold py-3 px-6 rounded-md text-base shadow-lg transition duration-300 cursor-pointer flex items-center justify-center sm:w-1/2 hover:bg-gray-700 border border-gray-700">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.865-1.441A2 2 0 0110.153 4h3.694a2 2 0 011.664.89l.865 1.441A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            Capture Live
-                        </label>
-                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
-
-                        <!-- Choose File Button -->
-                        <label for="fileInput" onclick="clearImage()" class="premium-btn text-black font-extrabold py-3 px-6 rounded-md text-base shadow-xl transition duration-300 cursor-pointer flex items-center justify-center sm:w-1/2 border border-[#00EADF]">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            Select File
-                        </label>
-                        <input type="file" id="fileInput" accept="image/*" class="hidden">
+                <!-- Loading Indicator (High-Value Design) -->
+                <div id="loading-div" class="hidden p-8 mb-8 rounded-xl loading-panel border-4">
+                    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                        <div class="flex items-center space-x-4">
+                            <i data-lucide="settings" class="w-8 h-8 text-[#00EADF] animate-spin-slow"></i>
+                            <div class="text-left">
+                                <p class="text-lg text-white font-bold oswald-font tracking-widest">BISWA ENGINE ACTIVATED</p>
+                                <p id="loading-text" class="text-sm text-gray-400 font-mono mono-font">Initializing AI Scan...</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl text-yellow-400 digital-readout">|</span>
+                            <div class="w-3 h-3 bg-red-400 rounded-full pulse-fade"></div>
+                            <div class="w-3 h-3 bg-emerald-400 rounded-full pulse-fade"></div>
+                            <div class="w-3 h-3 bg-amber-400 rounded-full pulse-fade"></div>
+                            <span class="text-2xl text-yellow-400 digital-readout">|</span>
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Loading Indicator -->
-                    <div id="loading" class="hidden mt-8 w-full p-4 bg-[#00EADF]/10 border border-[#00EADF]/30 rounded-md">
-                        <div class="flex items-center text-[#00EADF] font-semibold">
-                            <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-[#00EADF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span id="loading-text" class="text-lg digital-readout">Initializing V5 AI Model...</span>
+                <!-- Main Summary Block -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-gray-600/50">
+                        <p class="text-sm text-gray-400 uppercase tracking-widest mb-1">Total Calories</p>
+                        <span id="total-calories" class="text-5xl font-black digital-readout ai-neon-cyan">0</span>
+                        <span class="text-xl text-gray-500"> Kcal</span>
+                    </div>
+                    <!-- Macro Grids (Grams) -->
+                    <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-pink-400/50">
+                        <p class="text-sm text-gray-400 uppercase tracking-widest mb-1 text-pink-400">Total Protein</p>
+                        <span id="protein-g" class="text-4xl font-black digital-readout text-pink-400">0g</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-emerald-400/50">
+                        <p class="text-sm text-gray-400 uppercase tracking-widest mb-1 text-emerald-400">Total Carbs</p>
+                        <span id="carbs-g" class="text-4xl font-black digital-readout text-emerald-400">0g</span>
+                    </div>
+                </div>
+
+                <!-- Macronutrient Percentage Breakdown -->
+                <h3 class="text-lg font-bold text-gray-300 mb-4 border-t border-gray-800 pt-4">MACRO ENERGY DISTRIBUTION</h3>
+                <div class="space-y-4">
+                    <!-- Protein -->
+                    <div class="flex flex-col">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-base text-pink-400">PROTEIN</span>
+                            <span id="protein-percent" class="text-sm text-gray-400 mono-font">0% Energy</span>
+                        </div>
+                        <div class="w-full bg-gray-700/50 h-3 rounded-full overflow-hidden">
+                            <div id="macro-protein-bar" class="macro-bar h-full bg-pink-500" style="width: 0%;"></div>
                         </div>
                     </div>
 
-                    <!-- Error Message -->
-                    <div id="error-message-box" class="hidden mt-6 p-4 bg-red-900/40 border border-red-700 text-red-400 rounded-md w-full shadow-inner">
-                        <p id="error-message" class="text-sm font-medium text-center"></p>
+                    <!-- Carbs -->
+                    <div class="flex flex-col">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-base text-emerald-400">CARBOHYDRATES</span>
+                            <span id="carbs-percent" class="text-sm text-gray-400 mono-font">0% Energy</span>
+                        </div>
+                        <div class="w-full bg-gray-700/50 h-3 rounded-full overflow-hidden">
+                            <div id="macro-carbs-bar" class="macro-bar h-full bg-emerald-500" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Fat -->
+                    <div class="flex flex-col">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-base text-amber-400">FAT</span>
+                            <span id="fat-percent" class="text-sm text-gray-400 mono-font">0% Energy</span>
+                        </div>
+                        <div class="w-full bg-gray-700/50 h-3 rounded-full overflow-hidden">
+                            <div id="macro-fat-bar" class="macro-bar h-full bg-amber-500" style="width: 0%;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Detected Items List (Detailed Breakdown) -->
-            <div class="console-card p-8">
-                <h4 class="text-2xl font-bold text-white mb-6 flex justify-between items-center border-b border-[#1A1A1A] pb-3">
-                    Component Level Breakdown
-                    <span id="analysis-status-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-900 text-gray-400 border border-gray-700">
-                         Awaiting Data
-                    </span>
-                </h4>
-                <ul id="detected-items-list" class="space-y-3 h-[20rem] overflow-y-auto pr-2">
-                    <li class="text-gray-600 italic p-6 text-center text-lg">Load a photo to reveal the precise macronutrient profile of each food component.</li>
-                    <!-- Items will be populated here by JavaScript -->
+            <!-- Itemized Breakdown Module (Recipe section removed) -->
+            <div class="p-8 rounded-2xl ai-card">
+                <h2 class="text-2xl font-bold mb-6 text-white oswald-font tracking-wider border-b border-gray-700/50 pb-3">ITEMIZED COMPONENT BREAKDOWN</h2>
+                <ul id="detected-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+                    <li class="text-gray-600 italic p-6 text-center text-lg bg-gray-800/50 rounded-lg">Awaiting Image Input.</li>
                 </ul>
             </div>
-
         </div>
+    </main>
+</div>
 
-        <!-- COLUMN 3: Right Sidebar - AI Generator & Controls -->
-        <div class="lg:col-span-1 space-y-8 sticky top-6">
-
-            <!-- 4. AI Feature: Meal Prep Generator -->
-            <div class="console-card p-6">
-                <h4 class="text-xl font-bold text-white mb-4 flex items-center border-b border-[#1A1A1A] pb-3">
-                    <svg class="w-5 h-5 text-[#00EADF] mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10a2 2 0 01-2 2h-2M4 7v10a2 2 0 002 2h2m-2-4h8m0 0v-4m-4 4v-4m-4 4v-4"></path></svg>
-                    PRO RE-COMPOSITION AI
-                </h4>
-                <p class="text-gray-500 text-sm mb-6">Instantly generate a chef-grade, macro-compliant recipe leveraging your detected ingredients for optimal meal prep.</p>
-
-                <button id="generate-recipe-btn" class="premium-btn text-black font-extrabold py-3 px-6 rounded-md text-base w-full shadow-lg transition duration-300 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
-                    EXECUTE RECIPE GENERATION
-                </button>
-
-                <div id="recipe-loading" class="hidden mt-6 p-3 bg-[#00EADF]/10 border border-[#00EADF]/30 rounded-md">
-                    <div class="flex items-center justify-center text-[#00EADF] font-semibold">
-                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-[#00EADF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        <span id="recipe-loading-text">Optimizing nutrient ratios...</span>
-                    </div>
-                </div>
-
-                <div id="recipe-output-card" class="hidden mt-6 p-6 bg-[#0A0A0A] border border-[#00EADF]/30 rounded-md shadow-lg">
-                    <h5 id="recipe-name" class="text-xl font-extrabold ai-accent-color mb-3 border-b border-gray-800 pb-2 digital-readout"></h5>
-                    <p id="recipe-description" class="text-gray-400 mb-4 text-sm"></p>
-
-                    <h6 class="font-bold text-xs text-gray-500 mb-2 uppercase tracking-widest">INGREDIENTS</h6>
-                    <ul id="recipe-ingredients-list" class="list-disc list-inside text-sm text-gray-300 mb-4 ml-2 space-y-1"></ul>
-
-                    <h6 class="font-bold text-xs text-gray-500 mb-2 uppercase tracking-widest">PROCEDURE</h6>
-                    <ol id="recipe-steps-list" class="list-decimal list-inside text-sm text-gray-300 space-y-2 ml-2"></ol>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</main>
-
-
+<!-- Initialization Script -->
 <script>
     // --- Defensive Element Retrieval Helper ---
     const getElement = (id) => document.getElementById(id);
 
-    // Element references
-    const cameraInput = getElement('cameraInput');
-    const fileInput = getElement('fileInput');
-    const loadingDiv = getElement('loading');
+    // Element references (Using kebab-case to match HTML IDs)
+    const cameraInput = getElement('camera-input');
+    const fileInput = getElement('file-input');
+    const loadingDiv = getElement('loading-div'); // Updated ID
     const errorMessage = getElement('error-message');
     const errorMessageBox = getElement('error-message-box');
     const detectedItemsList = getElement('detected-items-list');
     const analysisStatusBadge = getElement('analysis-status-badge');
     const loadingText = getElement('loading-text');
-    const generateRecipeBtn = getElement('generate-recipe-btn');
-    const recipeLoadingDiv = getElement('recipe-loading');
-    const recipeOutputCard = getElement('recipe-output-card');
-    const recipeNameEl = getElement('recipe-name');
-    const recipeDescriptionEl = getElement('recipe-description');
-    const recipeIngredientsList = getElement('recipe-ingredients-list');
-    const recipeStepsList = getElement('recipe-steps-list');
 
     // NEW Element references
     const imagePreviewCard = getElement('image-preview-card');
@@ -320,7 +256,7 @@
     // NEW state variable to hold the base64 data for analysis
     let mealImageBase64 = null;
 
-    // API endpoint (Using a placeholder URL as no actual API key/endpoint was provided)
+    // API endpoint (Using the URL provided by the user)
     const EXTERNAL_API_URL = 'https://nucleoplasmic-maci-semiannually.ngrok-free.dev/webhook/meal-AI';
 
     // Mock data fallback (Used for initial analysis if API fails)
@@ -338,34 +274,6 @@
             carbs: 48,
             fat: 81
         }
-    };
-
-    // Mock Recipe Generation (Simulates a response from the LLM API using JSON schema)
-    const MOCK_RECIPE_RESPONSE = {
-        candidates: [{
-            content: {
-                parts: [{
-                    text: JSON.stringify({
-                        recipeName: "Executive Grade Steak & Sides Re-Composition",
-                        description: "A high-net-worth re-composition plan focusing on optimizing the dense caloric profile of the A5 Wagyu for peak performance and recovery. Recipe assumes residual ingredients are available.",
-                        ingredients: [
-                            "Remaining Wagyu Steak (diced)",
-                            "Remaining Truffle Potatoes",
-                            "1/2 tsp Fresh Thyme and Rosemary",
-                            "1/4 cup Beef Broth (low sodium)",
-                            "1/2 cup Mixed Greens (e.g., Arugula)",
-                            "1 Tsp Balsamic Glaze"
-                        ],
-                        steps: [
-                            "Dice the remaining Wagyu steak and combine it with the truffle mashed potatoes to create a rich base mixture.",
-                            "Gently warm the mixture in a skillet with the beef broth, incorporating the fresh thyme and rosemary for an aromatic lift.",
-                            "Plate the warm hash, topping it with a fresh bed of arugula to introduce a sharp, bitter balance.",
-                            "Drizzle the entire dish with a concentrated balsamic glaze to provide acid and depth, completing the executive meal."
-                        ]
-                    })
-                }]
-            }
-        }]
     };
 
     // --- Utility Functions ---
@@ -396,6 +304,7 @@
         const total = { calories: 0, protein: 0, carbs: 0, fat: 0 };
         if (foodItems && Array.isArray(foodItems)) {
             foodItems.forEach(item => {
+                // Ensure values are treated as numbers, even if provided as strings in mock data
                 total.calories += Number(item.calories) || 0;
                 total.protein += Number(item.protein) || 0;
                 total.carbs += Number(item.carbs) || 0;
@@ -410,19 +319,19 @@
         if (errorMessage) errorMessage.textContent = message;
         if (errorMessageBox) errorMessageBox.classList.remove('hidden');
         if (loadingDiv) loadingDiv.classList.add('hidden');
-        if (recipeLoadingDiv) recipeLoadingDiv.classList.add('hidden');
+        // Removed recipe-related elements
     }
 
     /**
-     * Simulates an external API call for image analysis.
-     * Falls back to mock data if API fails.
+     * Executes the external API call for image analysis.
+     * Implements error handling and mock data fallback.
      */
     async function analyzeImage(imageBlob, fileName) {
         const formData = new FormData();
         formData.append('file', imageBlob, fileName);
 
         const loadingMessages = [
-            'Executing V5 AI: Sub-Gram Metric Analysis...',
+            'Executing Biswa AI: Sub-Gram Metric Analysis...',
             'Processing 8K Image Data: Object & Boundary Detection...',
             'Cross-Referencing Proprietary Nutritional Database...',
             'Finalizing Energy Profile and Deviation Report...',
@@ -437,21 +346,22 @@
         }, 1500);
 
         try {
-            // Simulated fetch call (Replace with actual endpoint)
             const response = await fetch(EXTERNAL_API_URL, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                signal: AbortSignal.timeout(15000) // 15 second timeout for the API call
             });
 
             if (!response.ok) {
+                // Handle non-200 responses as potential failures
                 console.warn(`API non-OK status: ${response.status}. Falling back to high-grade static data.`);
-                return {...MOCK_DATA_FALLBACK, total: calculateTotalFromFood(MOCK_DATA_FALLBACK.food)};
+                throw new Error(`API returned status ${response.status}`);
             }
 
             const result = await response.json();
-
             let nutritionData = result.output || result;
 
+            // Ensure the total object is present and calculated if missing
             if (!nutritionData.total) {
                 nutritionData.total = calculateTotalFromFood(nutritionData.food);
             }
@@ -459,39 +369,21 @@
             return nutritionData;
 
         } catch (error) {
-            console.error("Network or parsing error during API call. Falling back to high-grade static data.", error);
+            console.error("Network, timeout, or parsing error during API call. Falling back to high-grade static data.", error);
+            // Simulate a short delay to display the loading messages before fallback
+            await new Promise(r => setTimeout(r, 2000));
             return {...MOCK_DATA_FALLBACK, total: calculateTotalFromFood(MOCK_DATA_FALLBACK.food)};
         } finally {
             clearInterval(updateLoadingMessage);
+             // Small delay for smoother transition out of loading state
+            await new Promise(r => setTimeout(r, 500));
         }
     }
 
-    /**
-     * Simulates a structured LLM API call for recipe generation.
-     */
-    async function generateRecipeFromLLM(foodItems) {
-        const userQuery = `Create a high-end, meal prep recipe using these analyzed ingredients: ${foodItems.map(f => f.name).join(', ')}. The recipe must be returned in the following JSON format: {recipeName, description, ingredients:[], steps:[]}`;
-        console.log("Simulated LLM Prompt:", userQuery);
-
-        // Simulate network delay for LLM
-        return new Promise(resolve => {
-            setTimeout(() => {
-                try {
-                    let result = JSON.parse(MOCK_RECIPE_RESPONSE.candidates[0].content.parts[0].text);
-                    resolve(result);
-                } catch (e) {
-                    console.error("Mock Recipe JSON Parsing Error:", e);
-                    resolve(null);
-                }
-            }, 2000);
-        });
-    }
 
     // --- Core Application Functions ---
 
-    /** * Clears the image preview, associated state, and crucially,
-     * the value of the file input elements.
-     */
+    /** Clears the image preview, associated state, and input values. */
     function clearImage() {
         // 1. Clear the image data state
         mealImageBase64 = null;
@@ -524,23 +416,21 @@
 
         // Reset detected items list
         if (detectedItemsList) {
-            detectedItemsList.innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg">Load a photo to reveal the precise macronutrient profile of each food component.</li>';
+            detectedItemsList.innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg bg-gray-800/50 rounded-lg">Awaiting Image Input.</li>';
         }
 
         // Reset status badge
         if (analysisStatusBadge) {
-            analysisStatusBadge.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-gray-900 text-gray-400 border border-gray-700';
-            analysisStatusBadge.innerHTML = 'Awaiting Data';
+            analysisStatusBadge.className = 'text-xs font-semibold px-4 py-2 rounded-full bg-gray-800 text-gray-400 border border-gray-700 mono-font';
+            analysisStatusBadge.innerHTML = 'AWAITING DATA';
         }
 
-        // Reset recipe generator
-        if (generateRecipeBtn) generateRecipeBtn.disabled = true;
-        if (recipeOutputCard) recipeOutputCard.classList.add('hidden');
-        if (recipeLoadingDiv) recipeLoadingDiv.classList.add('hidden');
+        // Hide loading and errors
+        if (loadingDiv) loadingDiv.classList.add('hidden');
         if (errorMessageBox) errorMessageBox.classList.add('hidden');
     }
 
-    /** Full reset function, called by the "Start Fresh Analysis" button. */
+    /** Full reset function, called by the "REBOOT SYSTEM" button. */
     function startFreshAnalysis() {
         location.reload();
     }
@@ -548,29 +438,26 @@
     /** Starts the analysis process using the stored Base64 image data. */
     async function startAnalysis(base64Data, fileName) {
         if (!base64Data) {
-            displayError('Error: No image data detected for analysis execution.');
+            displayError('Error: No image data detected for analysis execution. FILE NULL.');
             return;
         }
 
-        // Show loading and hide errors/recipe output
+        // 1. Reset display and show loading
+        resetAnalysisDisplay();
         if (loadingDiv) loadingDiv.classList.remove('hidden');
-        if (errorMessageBox) errorMessageBox.classList.add('hidden');
-        if (generateRecipeBtn) generateRecipeBtn.disabled = true;
-        if (recipeOutputCard) recipeOutputCard.classList.add('hidden');
 
-        // Convert base64 back to Blob for the simulated API call
+        // 2. Convert base64 back to Blob for the API call
         const imageBlob = base64ToBlob(base64Data, 'image/jpeg');
 
         const result = await analyzeImage(imageBlob, fileName);
 
-        // Hide loading
+        // 3. Hide loading
         if (loadingDiv) loadingDiv.classList.add('hidden');
 
         if (result && result.food && result.food.length > 0) {
             renderResults(result);
-            if (generateRecipeBtn) generateRecipeBtn.disabled = false;
         } else {
-            displayError('Analysis Failed: V5 AI could not detect high-confidence food items. Please review the photo quality.');
+            displayError('ANALYSIS FAILED: Biswa AI could not detect high-confidence food items. Review data quality.');
             resetAnalysisDisplay();
         }
     }
@@ -583,10 +470,10 @@
         // 1. Status Badge
         if (analysisStatusBadge) {
             if (status === 'mock_data') {
-                analysisStatusBadge.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-red-900/40 text-red-400 border border-red-700/50';
-                analysisStatusBadge.innerHTML = `⚠️ FALLBACK MODE (MOCK DATA)`;
+                analysisStatusBadge.className = 'text-xs font-semibold px-4 py-2 rounded-full bg-red-900/40 text-red-300 border border-red-700/50 mono-font';
+                analysisStatusBadge.innerHTML = `⚠️ FALLBACK MODE ACTIVATED`;
             } else {
-                analysisStatusBadge.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-[#00EADF]/10 text-[#00EADF] border border-[#00EADF]/50';
+                analysisStatusBadge.className = 'text-xs font-semibold px-4 py-2 rounded-full bg-[#00EADF]/10 ai-neon-cyan border border-[#00EADF]/50 mono-font';
                 analysisStatusBadge.innerHTML = `✅ EXECUTIVE REPORT READY`;
             }
         }
@@ -620,9 +507,9 @@
         if (elements.proteinG) elements.proteinG.textContent = `${protein_g.toFixed(1)}g`;
         if (elements.carbsG) elements.carbsG.textContent = `${carbs_g.toFixed(1)}g`;
         if (elements.fatG) elements.fatG.textContent = `${fat_g.toFixed(1)}g`;
-        if (elements.proteinPct) elements.proteinPct.textContent = `${protein_percent}% Energy`;
-        if (elements.carbsPct) elements.carbsPct.textContent = `${carbs_percent}% Energy`;
-        if (elements.fatPct) elements.fatPct.textContent = `${fat_percent}% Energy`;
+        if (elements.proteinPct) elements.proteinPct.textContent = `${protein_percent}% ENERGY`;
+        if (elements.carbsPct) elements.carbsPct.textContent = `${carbs_percent}% ENERGY`;
+        if (elements.fatPct) elements.fatPct.textContent = `${fat_percent}% ENERGY`;
 
         if (elements.macroProteinBar) elements.macroProteinBar.style.width = `${protein_percent}%`;
         if (elements.macroCarbsBar) elements.macroCarbsBar.style.width = `${carbs_percent}%`;
@@ -640,25 +527,25 @@
                     const itemFat = (Number(item.fat) || 0).toFixed(1);
 
                     const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center p-4 rounded-md bg-[#0A0A0A] hover:bg-black transition border border-[#1A1A1A] shadow-md';
+                    li.className = 'flex justify-between items-center p-4 rounded-xl bg-gray-900/50 hover:bg-gray-800 transition border border-gray-700/50 shadow-md';
                     li.innerHTML = `
                         <div class="flex flex-col">
                             <span class="font-bold text-white text-lg">${item.name}</span>
-                            <span class="text-xs text-gray-600 uppercase tracking-wider">${item.quantity}</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-wider mono-font">${item.quantity}</span>
                         </div>
                         <div class="text-right">
-                            <span class="text-2xl font-extrabold digital-readout ai-accent-color">${itemCalories} kcal</span>
+                            <span class="text-2xl font-extrabold digital-readout ai-neon-cyan">${itemCalories} Kcal</span>
                             <div class="text-sm text-gray-500 mt-1 space-x-3">
-                                <span class="text-pink-400 font-medium">P: ${itemProtein}g</span>
-                                <span class="text-emerald-400 font-medium">C: ${itemCarbs}g</span>
-                                <span class="text-amber-400 font-medium">F: ${itemFat}g</span>
+                                <span class="text-pink-400 font-medium mono-font">P: ${itemProtein}g</span>
+                                <span class="text-emerald-400 font-medium mono-font">C: ${itemCarbs}g</span>
+                                <span class="text-amber-400 font-medium mono-font">F: ${itemFat}g</span>
                             </div>
                         </div>
                     `;
                     detectedItemsList.appendChild(li);
                 });
             } else {
-                detectedItemsList.innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg">Analysis returned no detectable food components.</li>';
+                detectedItemsList.innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg bg-gray-800/50 rounded-lg">SYSTEM FAILURE: No food components detected in the data stream.</li>';
             }
         }
     }
@@ -667,7 +554,7 @@
     async function handleFileSelect(file) {
         if (!file) return;
 
-        // 1. Display the image immediately (using Object URL for performance)
+        // 1. Display the image immediately
         const objectURL = URL.createObjectURL(file);
         if (mealImagePreview) mealImagePreview.src = objectURL;
         if (imagePreviewCard) imagePreviewCard.classList.remove('hidden');
@@ -676,7 +563,7 @@
         try {
             mealImageBase64 = await fileToBase64(file);
         } catch (e) {
-            displayError("File processing error. The file may be corrupt or exceed size limits.");
+            displayError("FILE PROCESSING ERROR. The file may be corrupt or exceed size limits.");
             clearImage();
             return;
         }
@@ -690,60 +577,23 @@
         await startAnalysis(mealImageBase64, file.name);
     }
 
-    /** Handles recipe generation button click. */
-    async function handleRecipeGeneration() {
-        if (!mealImageBase64) {
-            displayError('Prerequisite Failure: Run a core analysis before executing PRO Re-Composition AI.');
-            return;
-        }
+    // --- INITIALIZATION AND EVENT LISTENERS ---
 
-        if (generateRecipeBtn) generateRecipeBtn.disabled = true;
-        if (recipeLoadingDiv) recipeLoadingDiv.classList.remove('hidden');
-        if (recipeOutputCard) recipeOutputCard.classList.add('hidden');
-        if (errorMessageBox) errorMessageBox.classList.add('hidden');
+    window.onload = function() {
+        lucide.createIcons();
+        resetAnalysisDisplay();
 
-        try {
-            // Use the food items from the mock data for recipe generation simulation
-            const foodItems = MOCK_DATA_FALLBACK.food;
-            const recipe = await generateRecipeFromLLM(foodItems);
+        // Image Upload/Capture listeners
+        if (fileInput) fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
+        if (cameraInput) cameraInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
 
-            if (recipe) {
-                recipeNameEl.textContent = recipe.recipeName;
-                recipeDescriptionEl.textContent = recipe.description;
+        // Remove Image listener
+        if (removeImageBtn) removeImageBtn.addEventListener('click', clearImage);
 
-                recipeIngredientsList.innerHTML = recipe.ingredients.map(i => `<li class="ml-1">${i}</li>`).join('');
-                recipeStepsList.innerHTML = recipe.steps.map(s => `<li class="ml-1">${s}</li>`).join('');
-
-                recipeOutputCard.classList.remove('hidden');
-            } else {
-                throw new Error('Recipe generation returned an invalid schema.');
-            }
-        } catch (error) {
-            console.error("Recipe Generation Error:", error);
-            displayError("PRO Re-Composition AI failure: Network interruption or execution error.");
-        } finally {
-            if (generateRecipeBtn) generateRecipeBtn.disabled = false;
-            if (recipeLoadingDiv) recipeLoadingDiv.classList.add('hidden');
-        }
-    }
-
-    // --- Event Listeners ---
-
-    // Image Upload/Capture listeners
-    if (fileInput) fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-    if (cameraInput) cameraInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-
-    // Recipe Generation listener
-    if (generateRecipeBtn) generateRecipeBtn.addEventListener('click', handleRecipeGeneration);
-
-    // NEW: Remove Image listener (The 'cross button' behavior)
-    if (removeImageBtn) removeImageBtn.addEventListener('click', clearImage);
-
-    // NEW: Start Fresh Analysis listener
-    if (startFreshAnalysisBtn) startFreshAnalysisBtn.addEventListener('click', startFreshAnalysis);
+        // Start Fresh Analysis listener
+        if (startFreshAnalysisBtn) startFreshAnalysisBtn.addEventListener('click', startFreshAnalysis);
+    };
 
 </script>
-
-
 </body>
 </html>
