@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biswa AI Calorie Sentinel</title>
+    <title>Biswa AI Calorie Sentinel - Dynamic Scrollable Name</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load custom fonts -->
@@ -66,19 +66,23 @@
             backdrop-filter: blur(2px);
             z-index: 50;
         }
+
+        /* UPDATED: Faster, more noticeable zoom/pan effect for visualization (6s) */
         .animated-scan-effect {
             opacity: 0.25;
             filter: brightness(0.8) contrast(1.5);
-            transform: scale(1.05);
-            animation: image-zoom-pan 35s linear infinite alternate;
+            animation: image-zoom-pan 6s ease-in-out infinite alternate; /* Reduced time from 10s to 6s for faster movement */
             object-fit: cover;
             width: 100%;
             height: 100%;
         }
         @keyframes image-zoom-pan {
-            0% { transform: scale(1.05) translateY(0%); }
-            100% { transform: scale(1.15) translateY(-5%); }
+            /* Start zoomed out (1.0 scale) and focused on top-left */
+            0% { transform: scale(1.0); transform-origin: top left; }
+            /* Zoom in (1.1 scale) and pan toward bottom-right */
+            100% { transform: scale(1.1); transform-origin: bottom right; }
         }
+
         #loader-image-container::before {
             content: "";
             position: absolute;
@@ -131,7 +135,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* --- ITEMIZED BREAKDOWN PCF GLOW (NEW) --- */
+        /* --- ITEMIZED BREAKDOWN PCF GLOW --- */
         .macro-glow-pink { text-shadow: 0 0 5px rgba(236, 72, 153, 0.8), 0 0 10px rgba(236, 72, 153, 0.4); }
         .macro-glow-green { text-shadow: 0 0 5px rgba(52, 211, 153, 0.8), 0 0 10px rgba(52, 211, 153, 0.4); }
         .macro-glow-amber { text-shadow: 0 0 5px rgba(251, 191, 36, 0.8), 0 0 10px rgba(251, 191, 36, 0.4); }
@@ -541,10 +545,7 @@
         await startAnalysis(mealImageBase64, file.name || 'uploaded_meal.jpg');
     }
 
-    /**
-     * Renders the results to the UI, implementing the strict 50/50 DUAL SCROLL layout.
-     * EDITS MADE HERE: Increased font size and added glow classes to PCF details.
-     */
+    /** Renders the results to the UI. */
     function renderResults(result) {
         const { total, food = [], status } = result;
         const analysisStatusBadge = getElement('analysis-status-badge');
@@ -609,7 +610,6 @@
                         <!-- PCF Line: Forced single line (whitespace-nowrap) AND SCROLLABLE (overflow-x-auto) -->
                         <div class="overflow-x-auto custom-scrollbar-horizontal whitespace-nowrap pt-1">
                             <span class="text-sm md:text-base text-gray-400 mono-font">
-                                <!-- EDITED: Increased text size, added font-bold, and macro-glow classes -->
                                 <span class="text-pink-400 font-bold mr-2 macro-glow-pink">P: ${(Number(item.protein) || 0).toFixed(1)}g</span>
                                 <span class="text-emerald-400 font-bold mr-2 macro-glow-green">C: ${(Number(item.carbs) || 0).toFixed(1)}g</span>
                                 <span class="text-amber-400 font-bold macro-glow-amber">F: ${(Number(item.fat) || 0).toFixed(1)}g</span>
