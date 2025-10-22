@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biswa AI Calorie Sentinel - Executive Nutrition Report</title>
+    <title>Biswa AI Calorie Sentinel - Visual Overhaul</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load custom fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Oswald:wght@200..700&family=Nova+Mono&display=swap" rel="stylesheet">
     <!-- Load Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Base Colors and Fonts */
+        /* --- THEME & UTILITIES --- */
         .inter-font { font-family: 'Inter', sans-serif; }
         .oswald-font { font-family: 'Oswald', sans-serif; }
         .mono-font { font-family: 'Nova Mono', monospace; }
         .bg-deep-space { background-color: #070a0f; }
         .ai-neon-cyan { color: #00EADF; }
+        .ai-shadow { box-shadow: 0 4px 15px rgba(0, 234, 223, 0.2); }
 
         /* Digital Readout Style */
         .digital-readout {
             font-family: 'Nova Mono', monospace;
-            text-shadow: 0 0 8px rgba(0, 234, 223, 0.6), 0 0 15px rgba(0, 234, 223, 0.3);
+            text-shadow: 0 0 10px rgba(0, 234, 223, 0.8), 0 0 20px rgba(0, 234, 223, 0.4);
             letter-spacing: -0.05em;
         }
 
@@ -30,9 +32,6 @@
             border: 1px solid #1a202c;
             box-shadow: 0 4px 15px rgba(0, 234, 223, 0.05);
             transition: all 0.3s ease;
-        }
-        .ai-card:hover {
-             box-shadow: 0 4px 20px rgba(0, 234, 223, 0.15);
         }
         .ai-button {
             background: linear-gradient(90deg, #00C8B7 0%, #00EADF 100%);
@@ -46,40 +45,109 @@
             transform: translateY(-2px);
         }
 
-        /* Loading Animation */
-        .pulse-fade { animation: pulseFade 1.5s infinite; }
-        .pulse-fade:nth-child(2) { animation-delay: 0.3s; }
-        .pulse-fade:nth-child(3) { animation-delay: 0.6s; }
-        @keyframes pulseFade {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
         /* Macro Bar transitions */
         .macro-bar { transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 
-        /* Custom Scrollbar for Itemized List */
+        /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0f131a; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #1a202c; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #00EADF; }
 
-        /* The High-Value Loading Panel */
-        .loading-panel {
-            border: 2px solid #00EADF;
-            box-shadow: 0 0 15px rgba(0, 234, 223, 0.4), inset 0 0 10px rgba(0, 234, 223, 0.2);
-            background: #111a26;
-            animation: border-pulse 4s infinite alternate;
+        /* --- LOADER & MODAL (MIND-BLOWING DESIGN) --- */
+
+        #full-screen-loader {
+            background-color: rgba(7, 10, 15, 0.98);
+            backdrop-filter: blur(2px);
+            z-index: 50;
         }
+
+        /* 1. Image container within loader - the animated background */
+        #loader-image-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        /* Image Scan Effect */
+        .animated-scan-effect {
+            opacity: 0.25;
+            filter: blur(5px) brightness(0.8) contrast(1.5); /* More intense blurring/contrast */
+            transform: scale(1.05);
+            animation: image-zoom-pan 35s linear infinite alternate; /* Faster/more noticeable movement */
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        @keyframes image-zoom-pan {
+            0% { transform: scale(1.05) translateY(0%); }
+            100% { transform: scale(1.15) translateY(-5%); }
+        }
+
+        /* 2. Scanline/CRT Overlay (The "More Design" part) */
+        #loader-image-container::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 55; /* Below the core overlay */
+            pointer-events: none;
+            /* Digital static/scanline effect */
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.5) 0,
+                rgba(0, 0, 0, 0.4) 1px,
+                transparent 2px,
+                transparent 3px
+            ),
+            linear-gradient(
+                180deg,
+                rgba(0, 234, 223, 0.1) 0%,
+                transparent 50%,
+                rgba(0, 234, 223, 0.1) 100%
+            );
+            mix-blend-mode: overlay;
+        }
+
+
+        /* The Engine Core Overlay Panel (centered) */
+        .engine-core-overlay {
+            z-index: 60;
+            position: relative;
+            border: 3px solid #00EADF; /* Thicker border */
+            box-shadow: 0 0 30px rgba(0, 234, 223, 0.8), inset 0 0 20px rgba(0, 234, 223, 0.4);
+            background: linear-gradient(135deg, #182536 0%, #070a0f 100%); /* Slightly lighter central panel */
+            animation: border-pulse 1.5s infinite alternate; /* More aggressive pulse */
+            padding: 3rem;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+        .engine-core-overlay:hover { transform: scale(1.01); }
+
         @keyframes border-pulse {
-            0% { border-color: #00EADF; box-shadow: 0 0 15px rgba(0, 234, 223, 0.4); }
-            100% { border-color: #00b3a7; box-shadow: 0 0 25px rgba(0, 234, 223, 0.8); }
+            0% { border-color: #00EADF; box-shadow: 0 0 30px rgba(0, 234, 223, 0.8); }
+            100% { border-color: #00b3a7; box-shadow: 0 0 45px rgba(0, 234, 223, 1); }
+        }
+
+        /* Pulsing Dot Animation */
+        .pulse-dot { animation: pulse-dot-keyframe 1.5s infinite; }
+        .pulse-dot:nth-child(2) { animation-delay: 0.3s; }
+        .pulse-dot:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes pulse-dot-keyframe {
+            0%, 100% { transform: scale(0.6); opacity: 0.6; }
+            50% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Slow Spin for Settings Icon */
+        .animate-spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="bg-deep-space text-gray-200 min-h-screen inter-font p-4 md:p-10">
+<body class="bg-deep-space text-gray-200 min-h-screen inter-font p-4 md:p-10 flex flex-col">
 
-<div class="max-w-8xl mx-auto">
+<div class="max-w-8xl mx-auto w-full flex-grow">
     <!-- Header: The Command Center Title -->
     <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center">
         <h1 class="text-5xl md:text-6xl font-extrabold oswald-font tracking-tight text-white leading-tight">
@@ -91,7 +159,7 @@
     </header>
 
     <!-- Error Message Box -->
-    <div id="error-message-box" class="hidden p-4 mb-8 bg-red-900/30 border border-red-600/50 rounded-xl card-transition">
+    <div id="error-message-box" class="hidden p-4 mb-8 bg-red-900/30 border border-red-600/50 rounded-xl">
         <p id="error-message" class="text-red-300 font-medium flex items-center mono-font">
             <i data-lucide="alert-triangle" class="w-5 h-5 mr-3 flex-shrink-0 text-red-400"></i>
             <span class="flex-grow">SYSTEM ALERT: An error occurred.</span>
@@ -124,14 +192,15 @@
 
             <!-- Preview Module -->
             <div id="image-preview-card" class="hidden p-4 rounded-2xl ai-card">
-                <h2 class="text-xl font-bold mb-4 text-white border-b border-gray-800 pb-2">LOADED DATA</h2>
-                <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl shadow-gray-900/50 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-white border-b border-gray-800 pb-2">LOADED DATA PREVIEW</h2>
+                <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden ai-shadow border border-gray-700">
                     <img id="meal-image-preview" src="" alt="Meal for analysis" class="w-full h-full object-cover transition duration-500 ease-in-out">
-                    <button id="remove-image-btn" class="absolute top-3 right-3 p-2 bg-red-600/70 rounded-full text-white hover:bg-red-500 transition shadow-lg">
+                    <button id="remove-image-btn" class="absolute top-3 right-3 p-2 bg-red-600/70 rounded-full text-white hover:bg-red-500 transition shadow-lg z-10">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
-                <p class="text-sm text-gray-500 mt-4 mono-font text-center">ANALYSIS PENDING</p>
+                <!-- Dynamic status text -->
+                <p id="image-status-text" class="text-sm text-gray-500 mt-4 mono-font text-center">AWAITING IMAGE INPUT</p>
             </div>
         </div>
 
@@ -145,41 +214,26 @@
                     <span id="analysis-status-badge" class="text-xs font-semibold px-4 py-2 rounded-full bg-gray-800 text-gray-400 border border-gray-700 mono-font">AWAITING DATA</span>
                 </div>
 
-                <!-- Loading Indicator (High-Value Design) -->
-                <div id="loading-div" class="hidden p-8 mb-8 rounded-xl loading-panel border-4">
-                    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                        <div class="flex items-center space-x-4">
-                            <i data-lucide="settings" class="w-8 h-8 text-[#00EADF] animate-spin-slow"></i>
-                            <div class="text-left">
-                                <p class="text-lg text-white font-bold oswald-font tracking-widest">BISWA ENGINE ACTIVATED</p>
-                                <p id="loading-text" class="text-sm text-gray-400 font-mono mono-font">Initializing AI Scan...</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-2xl text-yellow-400 digital-readout">|</span>
-                            <div class="w-3 h-3 bg-red-400 rounded-full pulse-fade"></div>
-                            <div class="w-3 h-3 bg-emerald-400 rounded-full pulse-fade"></div>
-                            <div class="w-3 h-3 bg-amber-400 rounded-full pulse-fade"></div>
-                            <span class="text-2xl text-yellow-400 digital-readout">|</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Main Summary Block -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-gray-600/50">
+                    <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-gray-600/50 md:col-span-3">
                         <p class="text-sm text-gray-400 uppercase tracking-widest mb-1">Total Calories</p>
                         <span id="total-calories" class="text-5xl font-black digital-readout ai-neon-cyan">0</span>
                         <span class="text-xl text-gray-500"> Kcal</span>
                     </div>
                     <!-- Macro Grids (Grams) -->
                     <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-pink-400/50">
-                        <p class="text-sm text-gray-400 uppercase tracking-widest mb-1 text-pink-400">Total Protein</p>
+                        <p class="text-sm text-pink-400 uppercase tracking-widest mb-1">Total Protein</p>
                         <span id="protein-g" class="text-4xl font-black digital-readout text-pink-400">0g</span>
                     </div>
                     <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-emerald-400/50">
-                        <p class="text-sm text-gray-400 uppercase tracking-widest mb-1 text-emerald-400">Total Carbs</p>
+                        <p class="text-sm text-emerald-400 uppercase tracking-widest mb-1">Total Carbs</p>
                         <span id="carbs-g" class="text-4xl font-black digital-readout text-emerald-400">0g</span>
+                    </div>
+                    <!-- Total Fat card -->
+                    <div class="p-4 rounded-xl bg-gray-800/50 border-l-4 border-l-amber-400/50">
+                        <p class="text-sm text-amber-400 uppercase tracking-widest mb-1">Total Fat</p>
+                        <span id="fat-g" class="text-4xl font-black digital-readout text-amber-400">0g</span>
                     </div>
                 </div>
 
@@ -221,7 +275,7 @@
                 </div>
             </div>
 
-            <!-- Itemized Breakdown Module (Recipe section removed) -->
+            <!-- Itemized Breakdown Module -->
             <div class="p-8 rounded-2xl ai-card">
                 <h2 class="text-2xl font-bold mb-6 text-white oswald-font tracking-wider border-b border-gray-700/50 pb-3">ITEMIZED COMPONENT BREAKDOWN</h2>
                 <ul id="detected-items-list" class="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
@@ -232,51 +286,93 @@
     </main>
 </div>
 
+
+
+<!-- FULL-SCREEN MODAL LOADER (Blocks Interaction & Displays Image) -->
+<div id="full-screen-loader" class="fixed inset-0 hidden flex items-center justify-center p-4">
+    <!-- Image Background for Scanning Effect -->
+    <div id="loader-image-container">
+        <!-- Loader meal image is displayed here with animated-scan-effect CSS class -->
+        <img id="loader-meal-image" src="" alt="Scanning Meal" class="animated-scan-effect">
+    </div>
+
+    <!-- Engine Core Overlay (Always on top) -->
+    <div class="engine-core-overlay rounded-3xl w-full max-w-lg mx-auto transform transition duration-500">
+        <div class="flex flex-col space-y-6 items-center">
+            <i data-lucide="settings" class="w-16 h-16 text-[#00EADF] animate-spin-slow"></i>
+            <div class="text-center">
+                <p class="text-3xl text-white font-black oswald-font tracking-widest leading-tight">
+                    <span class="ai-neon-cyan">BISWA ENGINE</span> ACTIVATED
+                </p>
+                <p id="modal-loading-text" class="text-md text-gray-400 font-mono mono-font mt-2">Initializing Deep Scan... Stand By.</p>
+            </div>
+            <div class="flex items-center space-x-4 mt-4">
+                <span class="text-3xl text-yellow-400 digital-readout">--- [</span>
+                <div class="w-4 h-4 bg-red-400 rounded-full pulse-dot"></div>
+                <div class="w-4 h-4 bg-emerald-400 rounded-full pulse-dot"></div>
+                <div class="w-4 h-4 bg-amber-400 rounded-full pulse-dot"></div>
+                <span class="text-3xl text-yellow-400 digital-readout">] ---</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Initialization Script -->
 <script>
-    // --- Defensive Element Retrieval Helper ---
+    // --- Global Configuration & References ---
     const getElement = (id) => document.getElementById(id);
-
-    // Element references (Using kebab-case to match HTML IDs)
-    const cameraInput = getElement('camera-input');
-    const fileInput = getElement('file-input');
-    const loadingDiv = getElement('loading-div'); // Updated ID
-    const errorMessage = getElement('error-message');
-    const errorMessageBox = getElement('error-message-box');
-    const detectedItemsList = getElement('detected-items-list');
-    const analysisStatusBadge = getElement('analysis-status-badge');
-    const loadingText = getElement('loading-text');
-
-    // NEW Element references
-    const imagePreviewCard = getElement('image-preview-card');
-    const mealImagePreview = getElement('meal-image-preview');
-    const removeImageBtn = getElement('remove-image-btn');
-    const startFreshAnalysisBtn = getElement('start-fresh-analysis-btn');
-
-    // NEW state variable to hold the base64 data for analysis
-    let mealImageBase64 = null;
-
-    // API endpoint (Using the URL provided by the user)
     const EXTERNAL_API_URL = 'https://nucleoplasmic-maci-semiannually.ngrok-free.dev/webhook/meal-AI';
 
-    // Mock data fallback (Used for initial analysis if API fails)
+    // Element references
+    const fileInput = getElement('file-input');
+    const cameraInput = getElement('camera-input');
+    const errorMessageBox = getElement('error-message-box');
+    const errorMessage = getElement('error-message');
+    const imagePreviewCard = getElement('image-preview-card');
+    const mealImagePreview = getElement('meal-image-preview');
+    const imageStatusText = getElement('image-status-text');
+    const fullScreenLoader = getElement('full-screen-loader');
+    const loaderMealImage = getElement('loader-meal-image');
+    const modalLoadingText = getElement('modal-loading-text');
+
+    // State
+    let mealImageBase64 = null;
+
+    // Mock data fallback (in case the external API is unavailable)
     const MOCK_DATA_FALLBACK = {
         status: "mock_data",
         food: [
-            { name: "Wagyu Steak (A5 Grade)", quantity: "6 oz (170g)", calories: 650, protein: 35, carbs: 0, fat: 55 },
-            { name: "Truffle Mashed Potatoes", quantity: "1 cup", calories: 350, protein: 6, carbs: 35, fat: 20 },
-            { name: "Asparagus Spears (Butter Glazed)", quantity: "10 pcs", calories: 75, protein: 4, carbs: 8, fat: 4 },
-            { name: "Demi-Glace Reduction", quantity: "2 Tbsp", calories: 40, protein: 1, carbs: 5, fat: 2 }
-        ],
-        total: {
-            calories: 1115,
-            protein: 46,
-            carbs: 48,
-            fat: 81
-        }
+            { name: "High-Grade Protein Bar (Simulated)", quantity: "1 unit", calories: 250, protein: 20, carbs: 15, fat: 10 },
+            { name: "Hydration Matrix (Simulated)", quantity: "1 cup", calories: 10, protein: 0, carbs: 2, fat: 0 }
+        ]
     };
 
     // --- Utility Functions ---
+
+    /** Displays an error message in the dedicated box. */
+    function displayError(message) {
+        if (errorMessage) {
+            const messageSpan = errorMessage.querySelector('span');
+            if(messageSpan) messageSpan.textContent = message;
+        }
+        if (errorMessageBox) errorMessageBox.classList.remove('hidden');
+        imageStatusText.textContent = 'ANALYSIS FAILED. REVIEW SYSTEM ALERT.';
+    }
+
+    /** Shows the full-screen Biswa Engine loader with the image. */
+    function showLoader(base64Data) {
+        if (fullScreenLoader) fullScreenLoader.classList.remove('hidden');
+        if (loaderMealImage && base64Data) {
+            // Display the base64 image on the modal background
+            loaderMealImage.src = 'data:image/jpeg;base64,' + base64Data;
+        }
+        imageStatusText.textContent = 'SCANNING... AWAITING REPORT.';
+    }
+
+    /** Hides the full-screen Biswa Engine loader. */
+    function hideLoader() {
+        if (fullScreenLoader) fullScreenLoader.classList.add('hidden');
+    }
 
     /** Converts a File object to a Base64 string. */
     function fileToBase64(file) {
@@ -289,22 +385,21 @@
     }
 
     /** Converts base64 to a Blob object. */
-    function base64ToBlob(base64, contentType) {
+    function base64ToBlob(base64, contentType = 'image/jpeg') {
         const byteCharacters = atob(base64);
         const byteNumbers = new Array(byteCharacters.length);
+        const byteArray = new Uint8Array(byteNumbers.length);
         for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
+            byteArray[i] = byteCharacters.charCodeAt(i);
         }
-        const byteArray = new Uint8Array(byteNumbers);
         return new Blob([byteArray], { type: contentType });
     }
 
-    /** Calculate total nutrition from food items. */
+    /** Calculates total nutrition from food items. */
     function calculateTotalFromFood(foodItems) {
         const total = { calories: 0, protein: 0, carbs: 0, fat: 0 };
         if (foodItems && Array.isArray(foodItems)) {
             foodItems.forEach(item => {
-                // Ensure values are treated as numbers, even if provided as strings in mock data
                 total.calories += Number(item.calories) || 0;
                 total.protein += Number(item.protein) || 0;
                 total.carbs += Number(item.carbs) || 0;
@@ -314,18 +409,24 @@
         return total;
     }
 
-    /** Displays an error message in the dedicated box. */
-    function displayError(message) {
-        if (errorMessage) errorMessage.textContent = message;
-        if (errorMessageBox) errorMessageBox.classList.remove('hidden');
-        if (loadingDiv) loadingDiv.classList.add('hidden');
-        // Removed recipe-related elements
+    /** Robustly parses the API response to find the core data object. */
+    function parseApiResponse(apiResponse) {
+        if (apiResponse && typeof apiResponse.output === 'object' && apiResponse.output !== null) return apiResponse.output;
+        if (apiResponse && Array.isArray(apiResponse.food)) return apiResponse;
+
+        if (typeof apiResponse === 'string') {
+             try {
+                return parseApiResponse(JSON.parse(apiResponse));
+             } catch (e) {
+                return null;
+             }
+        }
+        return null;
     }
 
-    /**
-     * Executes the external API call for image analysis.
-     * Implements error handling and mock data fallback.
-     */
+    // --- Core Application Functions ---
+
+    /** Executes the external image analysis API call. */
     async function analyzeImage(imageBlob, fileName) {
         const formData = new FormData();
         formData.append('file', imageBlob, fileName);
@@ -339,8 +440,8 @@
         ];
         let messageIndex = 0;
         const updateLoadingMessage = setInterval(() => {
-            if (loadingText) {
-                loadingText.textContent = loadingMessages[messageIndex % loadingMessages.length];
+            if (modalLoadingText) {
+                modalLoadingText.textContent = loadingMessages[messageIndex % loadingMessages.length];
                 messageIndex++;
             }
         }, 1500);
@@ -349,140 +450,119 @@
             const response = await fetch(EXTERNAL_API_URL, {
                 method: 'POST',
                 body: formData,
-                signal: AbortSignal.timeout(15000) // 15 second timeout for the API call
+                signal: AbortSignal.timeout(60000)
             });
 
-            if (!response.ok) {
-                // Handle non-200 responses as potential failures
-                console.warn(`API non-OK status: ${response.status}. Falling back to high-grade static data.`);
-                throw new Error(`API returned status ${response.status}`);
+            if (!response.ok) throw new Error(`API returned status ${response.status}.`);
+
+            const result = JSON.parse(await response.text());
+            const nutritionData = parseApiResponse(result);
+
+            if (!nutritionData || !Array.isArray(nutritionData.food)) {
+                 throw new Error("API response did not contain valid 'food' data.");
             }
-
-            const result = await response.json();
-            let nutritionData = result.output || result;
-
-            // Ensure the total object is present and calculated if missing
-            if (!nutritionData.total) {
-                nutritionData.total = calculateTotalFromFood(nutritionData.food);
-            }
-
+            if (!nutritionData.total) { nutritionData.total = calculateTotalFromFood(nutritionData.food); }
             return nutritionData;
 
         } catch (error) {
-            console.error("Network, timeout, or parsing error during API call. Falling back to high-grade static data.", error);
-            // Simulate a short delay to display the loading messages before fallback
-            await new Promise(r => setTimeout(r, 2000));
-            return {...MOCK_DATA_FALLBACK, total: calculateTotalFromFood(MOCK_DATA_FALLBACK.food)};
+            let errorMessageText = `API ERROR: ${error.message}. Displaying high-grade static data as fallback.`;
+            displayError(errorMessageText);
+            await new Promise(r => setTimeout(r, 1000));
+            const fallbackData = { ...MOCK_DATA_FALLBACK };
+            fallbackData.total = calculateTotalFromFood(fallbackData.food);
+            return fallbackData;
         } finally {
             clearInterval(updateLoadingMessage);
-             // Small delay for smoother transition out of loading state
             await new Promise(r => setTimeout(r, 500));
         }
     }
 
-
-    // --- Core Application Functions ---
-
-    /** Clears the image preview, associated state, and input values. */
-    function clearImage() {
-        // 1. Clear the image data state
-        mealImageBase64 = null;
-
-        // 2. Clear the input element values (CRITICAL for allowing re-upload of same file)
-        if (fileInput) fileInput.value = '';
-        if (cameraInput) cameraInput.value = '';
-
-        // 3. Hide the visual preview
-        if (mealImagePreview) mealImagePreview.src = '';
-        if (imagePreviewCard) imagePreviewCard.classList.add('hidden');
-
-        // 4. Reset all results displays
-        resetAnalysisDisplay();
-
-        console.log('Image and file input state successfully cleared.');
-    }
-
-    /** Resets all analysis displays (macros, list, recipe) without reloading the page. */
+    /** Resets all analysis displays and states. */
     function resetAnalysisDisplay() {
-        // Reset macro summary
-        if (getElement('total-calories')) getElement('total-calories').textContent = '0';
-
-        // Reset macro bars and percentages
+        getElement('total-calories').textContent = '0';
         ['protein', 'carbs', 'fat'].forEach(macro => {
             if (getElement(`macro-${macro}-bar`)) getElement(`macro-${macro}-bar`).style.width = '0%';
             if (getElement(`${macro}-g`)) getElement(`${macro}-g`).textContent = '0g';
             if (getElement(`${macro}-percent`)) getElement(`${macro}-percent`).textContent = '0% Energy';
         });
-
-        // Reset detected items list
-        if (detectedItemsList) {
-            detectedItemsList.innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg bg-gray-800/50 rounded-lg">Awaiting Image Input.</li>';
-        }
-
-        // Reset status badge
-        if (analysisStatusBadge) {
-            analysisStatusBadge.className = 'text-xs font-semibold px-4 py-2 rounded-full bg-gray-800 text-gray-400 border border-gray-700 mono-font';
-            analysisStatusBadge.innerHTML = 'AWAITING DATA';
-        }
-
-        // Hide loading and errors
-        if (loadingDiv) loadingDiv.classList.add('hidden');
+        getElement('detected-items-list').innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg bg-gray-800/50 rounded-lg">Awaiting Image Input.</li>';
+        getElement('analysis-status-badge').className = 'text-xs font-semibold px-4 py-2 rounded-full bg-gray-800 text-gray-400 border border-gray-700 mono-font';
+        getElement('analysis-status-badge').innerHTML = 'AWAITING DATA';
         if (errorMessageBox) errorMessageBox.classList.add('hidden');
     }
 
-    /** Full reset function, called by the "REBOOT SYSTEM" button. */
-    function startFreshAnalysis() {
-        location.reload();
+    /** Clears the image preview and state. */
+    function clearImage() {
+        mealImageBase64 = null;
+        fileInput.value = '';
+        cameraInput.value = '';
+        mealImagePreview.src = '';
+        imagePreviewCard.classList.add('hidden');
+        imageStatusText.textContent = 'AWAITING IMAGE INPUT';
+        loaderMealImage.src = ''; // Clear modal image
+        resetAnalysisDisplay();
     }
 
-    /** Starts the analysis process using the stored Base64 image data. */
+    /** Starts the full analysis and manages the loading state. */
     async function startAnalysis(base64Data, fileName) {
-        if (!base64Data) {
-            displayError('Error: No image data detected for analysis execution. FILE NULL.');
-            return;
-        }
+        if (!base64Data) { displayError('Error: No image data detected.'); return; }
 
-        // 1. Reset display and show loading
         resetAnalysisDisplay();
-        if (loadingDiv) loadingDiv.classList.remove('hidden');
+        showLoader(base64Data);
 
-        // 2. Convert base64 back to Blob for the API call
         const imageBlob = base64ToBlob(base64Data, 'image/jpeg');
-
         const result = await analyzeImage(imageBlob, fileName);
 
-        // 3. Hide loading
-        if (loadingDiv) loadingDiv.classList.add('hidden');
+        hideLoader();
 
         if (result && result.food && result.food.length > 0) {
             renderResults(result);
+            imageStatusText.textContent = 'SCAN COMPLETE. REPORT READY.';
         } else {
-            displayError('ANALYSIS FAILED: Biswa AI could not detect high-confidence food items. Review data quality.');
-            resetAnalysisDisplay();
+            if (errorMessageBox.classList.contains('hidden')) {
+                 displayError('ANALYSIS FAILED: AI could not detect food items.');
+            }
+             imageStatusText.textContent = 'ERROR. SEE SYSTEM ALERT.';
         }
     }
 
-    /** Renders the results (macros, items) to the UI. */
+    /** Handles file selection from user input. */
+    async function handleFileSelect(file) {
+        if (!file) return;
+
+        const objectURL = URL.createObjectURL(file);
+        mealImagePreview.src = objectURL;
+        imagePreviewCard.classList.remove('hidden');
+
+        imageStatusText.textContent = 'IMAGE DATA LOADED. PENDING SCAN INITIATION.';
+
+        try {
+            mealImageBase64 = await fileToBase64(file);
+        } catch (e) {
+            displayError("FILE PROCESSING ERROR.");
+            clearImage();
+            return;
+        }
+        mealImagePreview.onload = () => URL.revokeObjectURL(objectURL);
+
+        await startAnalysis(mealImageBase64, file.name || 'uploaded_meal.jpg');
+    }
+
+    /** Renders the results to the UI. */
     function renderResults(result) {
         const { total, food = [], status } = result;
-        const calculatedTotal = total;
+        const analysisStatusBadge = getElement('analysis-status-badge');
 
-        // 1. Status Badge
         if (analysisStatusBadge) {
-            if (status === 'mock_data') {
-                analysisStatusBadge.className = 'text-xs font-semibold px-4 py-2 rounded-full bg-red-900/40 text-red-300 border border-red-700/50 mono-font';
-                analysisStatusBadge.innerHTML = `⚠️ FALLBACK MODE ACTIVATED`;
-            } else {
-                analysisStatusBadge.className = 'text-xs font-semibold px-4 py-2 rounded-full bg-[#00EADF]/10 ai-neon-cyan border border-[#00EADF]/50 mono-font';
-                analysisStatusBadge.innerHTML = `✅ EXECUTIVE REPORT READY`;
-            }
+            const isMock = status === 'mock_data';
+            analysisStatusBadge.className = `text-xs font-semibold px-4 py-2 rounded-full mono-font ${isMock ? 'bg-red-900/40 text-red-300 border border-red-700/50' : 'bg-[#00EADF]/10 ai-neon-cyan border border-[#00EADF]/50'}`;
+            analysisStatusBadge.innerHTML = isMock ? `⚠️ FALLBACK MODE ACTIVATED` : `✅ EXECUTIVE REPORT READY`;
         }
 
-        // Calculations
-        const totalCalories = Number(calculatedTotal.calories) || 0;
-        const protein_g = Number(calculatedTotal.protein) || 0;
-        const carbs_g = Number(calculatedTotal.carbs) || 0;
-        const fat_g = Number(calculatedTotal.fat) || 0;
+        const totalCalories = Number(total.calories) || 0;
+        const protein_g = Number(total.protein) || 0;
+        const carbs_g = Number(total.carbs) || 0;
+        const fat_g = Number(total.fat) || 0;
 
         const protein_cal = protein_g * 4;
         const carbs_cal = carbs_g * 4;
@@ -493,105 +573,56 @@
         const carbs_percent = totalMacroCalories > 0 ? ((carbs_cal / totalMacroCalories) * 100).toFixed(0) : 0;
         const fat_percent = totalMacroCalories > 0 ? ((fat_cal / totalMacroCalories) * 100).toFixed(0) : 0;
 
-        // 2. Summary and Calories
-        const totalCalEl = getElement('total-calories');
-        if (totalCalEl) totalCalEl.textContent = totalCalories.toFixed(0);
+        // Populate Summary Cards
+        getElement('total-calories').textContent = totalCalories.toFixed(0);
+        getElement('protein-g').textContent = `${protein_g.toFixed(1)}g`;
+        getElement('carbs-g').textContent = `${carbs_g.toFixed(1)}g`;
+        getElement('fat-g').textContent = `${fat_g.toFixed(1)}g`;
 
-        // 3. Macronutrients (Grams and Percentage)
-        const elements = {
-            proteinG: getElement('protein-g'), carbsG: getElement('carbs-g'), fatG: getElement('fat-g'),
-            proteinPct: getElement('protein-percent'), carbsPct: getElement('carbs-percent'), fatPct: getElement('fat-percent'),
-            macroProteinBar: getElement('macro-protein-bar'), macroCarbsBar: getElement('macro-carbs-bar'), macroFatBar: getElement('macro-fat-bar')
-        };
+        // Populate Percentage Bars
+        getElement('protein-percent').textContent = `${protein_percent}% ENERGY`;
+        getElement('carbs-percent').textContent = `${carbs_percent}% ENERGY`;
+        getElement('fat-percent').textContent = `${fat_percent}% ENERGY`;
+        getElement('macro-protein-bar').style.width = `${protein_percent > 100 ? 100 : protein_percent}%`;
+        getElement('macro-carbs-bar').style.width = `${carbs_percent > 100 ? 100 : carbs_percent}%`;
+        getElement('macro-fat-bar').style.width = `${fat_percent > 100 ? 100 : fat_percent}%`;
 
-        if (elements.proteinG) elements.proteinG.textContent = `${protein_g.toFixed(1)}g`;
-        if (elements.carbsG) elements.carbsG.textContent = `${carbs_g.toFixed(1)}g`;
-        if (elements.fatG) elements.fatG.textContent = `${fat_g.toFixed(1)}g`;
-        if (elements.proteinPct) elements.proteinPct.textContent = `${protein_percent}% ENERGY`;
-        if (elements.carbsPct) elements.carbsPct.textContent = `${carbs_percent}% ENERGY`;
-        if (elements.fatPct) elements.fatPct.textContent = `${fat_percent}% ENERGY`;
-
-        if (elements.macroProteinBar) elements.macroProteinBar.style.width = `${protein_percent}%`;
-        if (elements.macroCarbsBar) elements.macroCarbsBar.style.width = `${carbs_percent}%`;
-        if (elements.macroFatBar) elements.macroFatBar.style.width = `${fat_percent}%`;
-
-
-        // 4. Detected Items List
+        // Populate Detected Items List
+        const detectedItemsList = getElement('detected-items-list');
         if (detectedItemsList) {
             detectedItemsList.innerHTML = '';
-            if (food.length > 0) {
-                food.forEach(item => {
-                    const itemCalories = (Number(item.calories) || 0).toFixed(0);
-                    const itemProtein = (Number(item.protein) || 0).toFixed(1);
-                    const itemCarbs = (Number(item.carbs) || 0).toFixed(1);
-                    const itemFat = (Number(item.fat) || 0).toFixed(1);
-
-                    const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center p-4 rounded-xl bg-gray-900/50 hover:bg-gray-800 transition border border-gray-700/50 shadow-md';
-                    li.innerHTML = `
-                        <div class="flex flex-col">
-                            <span class="font-bold text-white text-lg">${item.name}</span>
-                            <span class="text-xs text-gray-500 uppercase tracking-wider mono-font">${item.quantity}</span>
+            food.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center p-4 rounded-xl bg-gray-900/50 hover:bg-gray-800 transition border border-gray-700/50 ai-shadow';
+                li.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="font-bold text-white text-lg">${item.name}</span>
+                        <span class="text-xs text-gray-500 uppercase tracking-wider mono-font">${item.quantity}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-2xl font-extrabold digital-readout ai-neon-cyan">${(Number(item.calories) || 0).toFixed(0)} Kcal</span>
+                        <div class="text-sm text-gray-500 mt-1 space-x-3">
+                            <span class="text-pink-400 font-medium mono-font">P: ${(Number(item.protein) || 0).toFixed(1)}g</span>
+                            <span class="text-emerald-400 font-medium mono-font">C: ${(Number(item.carbs) || 0).toFixed(1)}g</span>
+                            <span class="text-amber-400 font-medium mono-font">F: ${(Number(item.fat) || 0).toFixed(1)}g</span>
                         </div>
-                        <div class="text-right">
-                            <span class="text-2xl font-extrabold digital-readout ai-neon-cyan">${itemCalories} Kcal</span>
-                            <div class="text-sm text-gray-500 mt-1 space-x-3">
-                                <span class="text-pink-400 font-medium mono-font">P: ${itemProtein}g</span>
-                                <span class="text-emerald-400 font-medium mono-font">C: ${itemCarbs}g</span>
-                                <span class="text-amber-400 font-medium mono-font">F: ${itemFat}g</span>
-                            </div>
-                        </div>
-                    `;
-                    detectedItemsList.appendChild(li);
-                });
-            } else {
-                detectedItemsList.innerHTML = '<li class="text-gray-600 italic p-6 text-center text-lg bg-gray-800/50 rounded-lg">SYSTEM FAILURE: No food components detected in the data stream.</li>';
-            }
+                    </div>
+                `;
+                detectedItemsList.appendChild(li);
+            });
         }
-    }
-
-    /** Main entry point for file selection (camera or file). */
-    async function handleFileSelect(file) {
-        if (!file) return;
-
-        // 1. Display the image immediately
-        const objectURL = URL.createObjectURL(file);
-        if (mealImagePreview) mealImagePreview.src = objectURL;
-        if (imagePreviewCard) imagePreviewCard.classList.remove('hidden');
-
-        // 2. Convert to Base64 for the API call preparation (asynchronously)
-        try {
-            mealImageBase64 = await fileToBase64(file);
-        } catch (e) {
-            displayError("FILE PROCESSING ERROR. The file may be corrupt or exceed size limits.");
-            clearImage();
-            return;
-        }
-
-        // Revoke the object URL after image is loaded to prevent memory leaks
-        mealImagePreview.onload = () => {
-            URL.revokeObjectURL(objectURL);
-        };
-
-        // 3. Start Analysis
-        await startAnalysis(mealImageBase64, file.name);
     }
 
     // --- INITIALIZATION AND EVENT LISTENERS ---
-
     window.onload = function() {
         lucide.createIcons();
-        resetAnalysisDisplay();
+        clearImage(); // Initial state setup
 
-        // Image Upload/Capture listeners
+        // Input listeners
         if (fileInput) fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
         if (cameraInput) cameraInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-
-        // Remove Image listener
-        if (removeImageBtn) removeImageBtn.addEventListener('click', clearImage);
-
-        // Start Fresh Analysis listener
-        if (startFreshAnalysisBtn) startFreshAnalysisBtn.addEventListener('click', startFreshAnalysis);
+        if (getElement('remove-image-btn')) getElement('remove-image-btn').addEventListener('click', clearImage);
+        if (getElement('start-fresh-analysis-btn')) getElement('start-fresh-analysis-btn').addEventListener('click', () => location.reload());
     };
 
 </script>
